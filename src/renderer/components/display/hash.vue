@@ -33,21 +33,45 @@ export default {
       //   this.$emit("command");
     },
     set(field) {
-      this.$emit(
-        "command",
-        `hset ${this.value.key} ${field} ${this.value.value[field]}`
-      );
+      if (this.value.type === "hash")
+        this.$emit(
+          "command",
+          `hset ${this.value.key} ${field} ${this.value.value[field]}`
+        );
+      else if (this.value.type === "zset") {
+      }
       this.load();
     },
     delField(field) {
-      this.$emit("command", `HDEL ${this.value.key} ${field}`);
+      if (this.value.type === "hash")
+        this.$emit("command", `HDEL ${this.value.key} ${field}`);
+      else if (this.value.type === "zset") {
+        this.$emit("command", `zrem ${this.value.key} ${field}`);
+      }
       this.load();
     },
     load() {
-      if (this.value) {
-        this.client.hgetall(this.value.key, (err, value) => {
-          this.$set(this.value, "value", value);
-        });
+      if (this.value&& this.value.type === 'hash'&& this.value.type === 'zset') {
+        if (this.value.type === "hash") {
+          this.client.hgetall(this.value.key, (err, value) => {
+            this.$set(this.value, "value", value);
+          });
+        } else if (this.value.type === "zset") {
+          this.client.zrange(
+            this.value.key,
+            0,
+            -1,
+            "WITHSCORES",
+            (err, value) => {
+              if (err) console.log(err);
+              let res = {};
+              for (let i = 0; i < value.length; i += 2) {
+                res[value[i]] = value[i + 1];
+              }
+              this.$set(this.value, "value", res);
+            }
+          );
+        }
       }
     }
   },

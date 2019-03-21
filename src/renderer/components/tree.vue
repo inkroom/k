@@ -1,10 +1,36 @@
+<style>
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+}
+</style>
+
 <template>
-  <el-tree :data="hosts" :props="defaultProps" :load="load" @node-click="handleNodeClick" lazy></el-tree>
+  <el-tree
+    :data="hosts"
+    :props="defaultProps"
+    :load="load"
+    @node-click="handleNodeClick"
+    :expand-on-click-node="false"
+    node-key="host"
+    lazy
+  >
+    <div class="custom-tree-node" slot-scope="{ node, data }">
+      <span>{{ node.label }}</span>
+      <span style="float:right">
+        <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
+        <i class="el-icon-plus" @click="() => append(node,data)"></i>
+        <i class="el-icon-delete" @click="() => remove(node,data)"></i>
+      </span>
+    </div>
+  </el-tree>
 </template>
 
 <script>
-import { throws } from "assert";
-
 export default {
   data() {
     //获取存储的host
@@ -35,6 +61,33 @@ export default {
     };
   },
   methods: {
+    append(node, data) {},
+    refresh(node, data) {},
+    remove(node, data) {
+      if (node.level === 1) {
+        //host，此时为删除数据
+        this.$confirm(`确认删除连接-${node.data.label}?`, "删除链接").then(
+          () => {
+            console.log(node);
+            const parent = node.parent;
+            const children = parent.data.children || parent.childNodes;
+            const index = children.findIndex(d => d.data.host === data.host);
+            console.log(children);
+            children.splice(index, 1);
+            console.log(index);
+
+            this.$db
+              .get("hosts")
+              .remove({ label: data.label })
+              .write();
+
+            //从当前数据删除
+            console.log(node);
+          }
+        );
+      }
+      console.log(node);
+    },
     handleNodeClick(data, node) {
       if (node.isLeaf) {
         //叶子节点 ，也就是key

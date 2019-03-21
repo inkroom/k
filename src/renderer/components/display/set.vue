@@ -47,19 +47,18 @@ export default {
   },
   methods: {
     set(row, col, index) {
-      this.$emit(
-        "command",
-        `lset ${this.value.key} ${index} ${this.list[row][col].value}`
-      );
-      this.load();
+      // this.$emit(
+      //   "command",
+      //   `lset ${this.value.key} ${index} ${this.list[row][col].value}`
+      // );
+      // this.load();
     },
     filter(start, end) {
       return this.value.value.slice(start, end);
     },
     load() {
-      if (this.value && this.value.type === "list") {
-        // TODO 后期可能需要处理一下超大数据的情况
-        this.client.lrange(this.value.key, 0, -1, (err, value) => {
+      if (this.value&& this.value.type === 'set') {
+        this.client.sunion(this.value.key, (err, value) => {
           if (err) console.log(err);
 
           let list = [];

@@ -14,6 +14,7 @@ client.keys('*', function (err, reply) {
 
 module.exports = {
     keys(host, port, cb) {
+        
         redis.createClient(port, host).keys('*', cb);
     },
     type(host, port, key, cb) {
@@ -30,7 +31,9 @@ module.exports = {
         redis.createClient().multi('get 123').exec()
     },
     exec(host, port, command,args, cb){
-        redis.createClient(port, host).sendCommand(command,args,cb);
+
+
+        // redis.createClient(port, host).zrange(key,0,-1, .sendCommand(command,args,cb);
     },
     redis:redis,
 

@@ -16,7 +16,7 @@ export default {
     }
   },
   mounted() {
-    if (this.value) {
+    if (this.value&& this.value.type === 'string') {
       this.client.get(this.value.key, (err, value) => {
         this.$set(this.value, "value", value);
       });

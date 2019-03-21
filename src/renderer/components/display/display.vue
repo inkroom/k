@@ -15,12 +15,12 @@
       <el-col :md="2" :sm="2" :xs="2">
         <span>name：</span>
       </el-col>
-      <el-col :md="13" :sm="10" :xs="6">
+      <el-col :md="13" :sm="11" :xs="6">
         <!-- <span>{{value.key}}</span> -->
-        
-        <el-input v-model="value.key" size="mini" disabled=""></el-input>
+
+        <el-input v-model="value.key" size="mini" disabled></el-input>
       </el-col>
-      <el-col :md="9" :sm="12" :xs="16">
+      <el-col :md="9" :sm="11" :xs="16">
         <span>TTL: {{ ttl }}</span>
         <el-button size="mini" @click.native="rename">重命名</el-button>
         <el-button size="mini" @click.native="del">删除</el-button>
@@ -28,8 +28,10 @@
       </el-col>
     </el-row>
     <k-string :value="value" :client="client" v-if="type==='string'"></k-string>
-    <k-hash :value="value" :client="client" v-if="type==='hash'" @command="command"></k-hash>
-    <k-list :value="value" :client="client" v-if="type==='list'" @command="command"></k-list>
+    <k-hash :value="value" :client="client" v-else-if="type==='hash'" @command="command"></k-hash>
+    <k-list :value="value" :client="client" v-else-if="type==='list'" @command="command"></k-list>
+    <k-set :value="value" :client="client" v-else-if="type==='set'" @command="command"></k-set>
+    <k-hash :value="value" :client="client" v-else-if="type==='zset'" @command="command"></k-hash>
 
     <el-row style="margin-top:15px;">
       <hr>控制台
@@ -56,10 +58,11 @@
 <script>
 import KString from "./string";
 import KHash from "./hash";
-import KList from './list';
+import KList from "./list";
+import KSet from "./set";
 
 export default {
-  components: { KString, KHash,KList },
+  components: { KString, KHash, KList, KSet },
   props: {
     value: {
       type: Object,
@@ -95,7 +98,7 @@ export default {
   },
   methods: {
     command(command) {
-      if (command && typeof(command)==='string' && command.trim() !== "") {
+      if (command && typeof command === "string" && command.trim() !== "") {
         this.terminal.command = command;
       }
       if (this.terminal.command.trim() !== "") {
@@ -140,46 +143,12 @@ export default {
         this.command();
       }
     },
-    rename() {
-      this.$prompt("请输入新的key", "", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /.+/,
-        inputErrorMessage: "key格式不正确"
-      })
-        .then(({ value }) => {
-          this.terminal.command = "rename " + this.value.key + " " + value;
-          this.value.key = value;
-          this.command();
-        })
-        .catch(() => {});
-    },
-    del() {
-      this.terminal.command = `del ${this.value.key}`;
-      this.value = null;
-      this.command();
-    },
     load(nv) {
       if (nv) {
         this.client.type(nv.key, (err, v) => {
+          this.value.type = v;
           this.type = v;
           console.log(`type = ${v}`);
-          // if (this.type === "string") {
-          //   this.client.get(nv.key, (err, value) => {
-          //     this.$set(this.value, "value", value);
-          //   });
-          // } else if (this.type === "hash") {
-          //   console.log("获取hash");
-          //   this.client.hgetall(nv.key, (err, value) => {
-          //     // let values = {};
-          //     // console.log(value);
-          //     // for(let i=0;i<value.length;i+=2){
-          //     //   values[value[i]] = value[i+1];
-          //     // }
-
-          //     this.value.value = value;
-          //   });
-          // }
         });
 
         this.client.ttl(nv.key, (err, value) => {

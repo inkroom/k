@@ -25,16 +25,10 @@ export default {
   components: { Tree, Display },
   methods: {
     leafClick(data, client) {
+      this.show = false;
       this.key = data;
       this.client = client;
       this.show = true;
-      // this.client
-      //   .on("ready", () => {
-      //     this.show = true;
-      //   })
-      //   .on("error", () => {
-      //     this.$message("连接失败");
-      //   });
     }
   }
 };
