@@ -2,6 +2,10 @@
 
 > 基于electron的redis客户端
 
+
+#### features
+- [ ] redis订阅发布
+
 #### Build Setup
 
 ``` bash

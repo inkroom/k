@@ -1,6 +1,6 @@
 <template>
   <el-container style="height:100%">
-    <el-aside width="200px" class="left">
+    <el-aside width="250px" class="left">
       <tree @leaf-click="leafClick"></tree>
       <el-button size="small" style="position:absolute;bottom:5px;">添加</el-button>
     </el-aside>
