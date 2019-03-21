@@ -5,16 +5,14 @@
       <el-button size="small" style="position:absolute;bottom:5px;">添加</el-button>
     </el-aside>
     <el-main style="border:1px solid blue">
-      <display :value="key" v-if="show"></display>
+      <display :value="key" v-if="show" :client="client"></display>
     </el-main>
   </el-container>
 </template>
 
 <script>
-
-
-import Tree from "./redis/tree";
-import Display from "./redis/display";
+import Tree from "./tree";
+import Display from "./display/display";
 
 export default {
   name: "landing-page",
@@ -24,18 +22,19 @@ export default {
       key: {}
     };
   },
-  components: {  Tree, Display },
+  components: { Tree, Display },
   methods: {
-    open(link) {
-      this.$electron.shell.openExternal(link);
-    },
-    leafClick(data) {
-
+    leafClick(data, client) {
       this.key = data;
-      let _this = this;
-       _this.show = true;
-
-
+      this.client = client;
+      this.show = true;
+      // this.client
+      //   .on("ready", () => {
+      //     this.show = true;
+      //   })
+      //   .on("error", () => {
+      //     this.$message("连接失败");
+      //   });
     }
   }
 };

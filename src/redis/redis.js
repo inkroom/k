@@ -24,5 +24,14 @@ module.exports = {
     },
     get(host, port, key, cb) {
         redis.createClient(port, host).get(key, cb);
-    }
+    },
+    set(host, port, key,value, cb) {
+        redis.createClient(port, host).set(key,value,cb);
+        redis.createClient().multi('get 123').exec()
+    },
+    exec(host, port, command,args, cb){
+        redis.createClient(port, host).sendCommand(command,args,cb);
+    },
+    redis:redis,
+
 }
