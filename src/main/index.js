@@ -1,11 +1,17 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'path';
+
+
+
+
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  import '../renderer/store'
 }
 
 let mainWindow

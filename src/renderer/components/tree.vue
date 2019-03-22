@@ -10,20 +10,20 @@
 </style>
 
 <template>
+   <!-- :data="hosts" -->
   <el-tree
-    :data="hosts"
+    :data="$store.state.hosts.hosts"
     :props="defaultProps"
     :load="load"
     @node-click="handleNodeClick"
     :expand-on-click-node="false"
-    node-key="host"
     lazy
   >
     <div class="custom-tree-node" slot-scope="{ node, data }">
       <span>{{ node.label }}</span>
       <span style="float:right">
         <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
-        <i class="el-icon-plus" @click="() => append(node,data)"></i>
+        <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level==1"></i>
         <i class="el-icon-delete" @click="() => remove(node,data)"></i>
       </span>
     </div>
@@ -33,26 +33,11 @@
 <script>
 export default {
   data() {
+
+      //FIXME: 未知原因导致数据存储突然多出一层
+    console.log(this.$store.state.hosts.hosts);
     //获取存储的host
-    let hosts = this.$db.get("hosts").value();
-    console.log(hosts);
     return {
-      hosts: hosts,
-      data: [
-        {
-          label: "一级 1",
-          children: [
-            {
-              label: "二级 1-1",
-              children: [
-                {
-                  label: "三级 1-1-1"
-                }
-              ]
-            }
-          ]
-        }
-      ],
       defaultProps: {
         children: "children",
         label: "label",
@@ -68,25 +53,16 @@ export default {
         //host，此时为删除数据
         this.$confirm(`确认删除连接-${node.data.label}?`, "删除链接").then(
           () => {
-            console.log(node);
-            const parent = node.parent;
-            const children = parent.data.children || parent.childNodes;
-            const index = children.findIndex(d => d.data.host === data.host);
-            console.log(children);
-            children.splice(index, 1);
-            console.log(index);
+            console.log('发送删除')
+            console.log(this.$store)
+            this.$store.dispatch('removeHost',data.label).then((value)=>{
+console.log(`返回的结果${value}`)
+this.$message('删除成功');
+            });
 
-            this.$db
-              .get("hosts")
-              .remove({ label: data.label })
-              .write();
-
-            //从当前数据删除
-            console.log(node);
           }
         );
       }
-      console.log(node);
     },
     handleNodeClick(data, node) {
       if (node.isLeaf) {
@@ -126,12 +102,15 @@ export default {
       }
     },
     load(node, resolve) {
-      console.log(node);
       if (node.level === 0) {
-        resolve(this.hosts);
+        resolve(this.$store.state.hosts.hosts);
       } else if (node.level === 1) {
+        let _this = this;
         this.$redis.keys(node.data.host, node.data.port, function(err, reply) {
-          if (err) throw err;
+          if (err){
+            _this.$message('连接错误');
+            resolve([]);
+          }
           console.log(reply);
           if (reply.length == 0) {
             resolve([]);
