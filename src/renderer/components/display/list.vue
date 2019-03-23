@@ -21,9 +21,9 @@
 <script>
 export default {
   props: {
-    value: {
-      type: Object,
-      required: false
+    redis: {
+      type: String,
+      required: true,
     },
     client: {
       type: Object,
@@ -39,8 +39,8 @@ export default {
   },
   computed: {
     getRowCount() {
-      if (this.value && this.value.value) {
-        return Math.ceil(this.value.value.length / 3);
+      if (this.redis && this.value) {
+        return Math.ceil(this.value.length / 3);
       }
       return 0;
     }
@@ -49,17 +49,14 @@ export default {
     set(row, col, index) {
       this.$emit(
         "command",
-        `lset ${this.value.key} ${index} ${this.list[row][col].value}`
+        `lset ${this.redis} ${index} ${this.list[row][col].value}`
       );
       this.load();
     },
-    filter(start, end) {
-      return this.value.value.slice(start, end);
-    },
     load() {
-      if (this.value && this.value.type === "list") {
+      if (this.redis ) {
         // TODO 后期可能需要处理一下超大数据的情况
-        this.client.lrange(this.value.key, 0, -1, (err, value) => {
+        this.client.lrange(this.redis, 0, -1, (err, value) => {
           if (err) console.log(err);
 
           let list = [];
@@ -74,13 +71,13 @@ export default {
           this.list = list;
 
           this.$set(this, "list", list);
-          this.$set(this.value, "value", value);
+          this.$set(this, "value", value);
         });
       }
     }
   },
   watch: {
-    value() {
+    redis() {
       this.load();
     }
   },

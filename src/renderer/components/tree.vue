@@ -10,13 +10,13 @@
 </style>
 
 <template>
-   <!-- :data="hosts" -->
+  <!-- :data="hosts" -->
   <el-tree
     :data="$store.state.hosts.hosts"
     :props="defaultProps"
     :load="load"
     @node-click="handleNodeClick"
-    :expand-on-click-node="false"
+    :expand-on-click-node="true"
     lazy
   >
     <div class="custom-tree-node" slot-scope="{ node, data }">
@@ -33,8 +33,7 @@
 <script>
 export default {
   data() {
-
-      //FIXME: 未知原因导致数据存储突然多出一层
+    //FIXME: 未知原因导致数据存储突然多出一层
     console.log(this.$store.state.hosts.hosts);
     //获取存储的host
     return {
@@ -47,28 +46,48 @@ export default {
   },
   methods: {
     append(node, data) {},
-    refresh(node, data) {},
+    refresh(node, data) {
+      if (node.level === 1) {
+        //host
+        console.log(this.$redis);
+        this.$redis.redis
+          .createClient(data.port, data.host)
+          .keys("*", (err, value) => {
+            if (err) {
+              this.$message.error(`${data.label}刷新失败`);
+            } else {
+              console.log(node);
+            }
+          });
+      } else if (node.level === 1) {//key
+
+
+
+      }
+    },
     remove(node, data) {
       if (node.level === 1) {
         //host，此时为删除数据
         this.$confirm(`确认删除连接-${node.data.label}?`, "删除链接").then(
           () => {
-            console.log('发送删除')
-            console.log(this.$store)
-            this.$store.dispatch('removeHost',data.label).then((value)=>{
-console.log(`返回的结果${value}`)
-this.$message('删除成功');
-            });
-
+            this.$store
+              .dispatch("removeHost", data.label)
+              .then(value => {
+                this.$message("删除成功");
+              })
+              .catch(value => {
+                this.$message.error("删除失败");
+              });
           }
         );
       }
     },
     handleNodeClick(data, node) {
-      if (node.isLeaf) {
+      if (node.level===2) {
         //叶子节点 ，也就是key
         //传递事件，需要传递父节点
         let key = {
+          label:node.parent.data.label,
           key: data.label,
           host: node.parent.data.host,
           port: node.parent.data.port
@@ -91,9 +110,7 @@ this.$message('删除成功');
         let client = this.$redis.redis
           .createClient(node.data.port, node.data.host)
           .on("ready", () => {
-            console.log("client");
-            console.log(client);
-            this.$emit("leaf-click", null, client);
+            this.$emit("leaf-click", data, client);
             this.show = true;
           })
           .on("error", () => {
@@ -107,8 +124,8 @@ this.$message('删除成功');
       } else if (node.level === 1) {
         let _this = this;
         this.$redis.keys(node.data.host, node.data.port, function(err, reply) {
-          if (err){
-            _this.$message('连接错误');
+          if (err) {
+            _this.$message("连接错误");
             resolve([]);
           }
           console.log(reply);

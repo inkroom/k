@@ -10,28 +10,40 @@
 
 
 <template>
-  <div>
-    <el-row v-if="value">
+  <el-scrollbar style="height:100%">
+    <el-row v-if="redis">
       <el-col :md="2" :sm="2" :xs="2">
         <span>name：</span>
       </el-col>
       <el-col :md="13" :sm="11" :xs="6">
         <!-- <span>{{value.key}}</span> -->
 
-        <el-input v-model="value.key" size="mini" disabled></el-input>
+        <el-input v-model="redis" size="mini" disabled></el-input>
       </el-col>
       <el-col :md="9" :sm="11" :xs="16">
         <span>TTL: {{ ttl }}</span>
         <el-button size="mini" @click.native="rename">重命名</el-button>
         <el-button size="mini" @click.native="del">删除</el-button>
-        <el-button size="mini" @click.native="set">修改</el-button>
+        <!-- <el-button size="mini" @click.native="set">修改</el-button> -->
       </el-col>
     </el-row>
-    <k-string :value="value" :client="client" v-if="type==='string'"></k-string>
-    <k-hash :value="value" :client="client" v-else-if="type==='hash'" @command="command"></k-hash>
-    <k-list :value="value" :client="client" v-else-if="type==='list'" @command="command"></k-list>
-    <k-set :value="value" :client="client" v-else-if="type==='set'" @command="command"></k-set>
-    <k-hash :value="value" :client="client" v-else-if="type==='zset'" @command="command"></k-hash>
+    <k-string :redis="redis" :client="client" v-if="type==='string'"></k-string>
+    <k-hash
+      :redis="redis"
+      :type="type"
+      :client="client"
+      v-else-if="type==='hash'"
+      @command="command"
+    ></k-hash>
+    <k-list :redis="redis" :client="client" v-else-if="type==='list'" @command="command"></k-list>
+    <k-set :redis="redis" :client="client" v-else-if="type==='set'" @command="command"></k-set>
+    <k-hash
+      :redis="redis"
+      :type="type"
+      :client="client"
+      v-else-if="type==='zset'"
+      @command="command"
+    ></k-hash>
 
     <el-row style="margin-top:15px;">
       <hr>控制台
@@ -52,7 +64,7 @@
         style="color:black !important;"
       ></el-input>
     </el-row>
-  </div>
+  </el-scrollbar>
 </template>
 
 <script>
@@ -64,8 +76,9 @@ import KSet from "./set";
 export default {
   components: { KString, KHash, KList, KSet },
   props: {
-    value: {
-      type: Object,
+    redis: {
+      //对应键的key，如果是host就没有
+      type: String,
       required: false
     },
     client: {
@@ -78,6 +91,7 @@ export default {
       type: "",
       ttl: "-1",
       name: "",
+      value:null,
       terminal: {
         command: "",
         result: ""
@@ -85,16 +99,13 @@ export default {
     };
   },
   mounted() {
-    console.log("-0-----");
-    console.log(this.value);
-
-    if (!this.value) {
+    if (!this.key) {
       //没有vlaue，默认显示服务器状态
       this.terminal.command = "info";
       this.command();
     }
 
-    this.load(this.value);
+    this.load(this.key);
   },
   methods: {
     command(command) {
@@ -119,7 +130,6 @@ export default {
               return;
             }
           }
-          console.log(value);
           if (value instanceof Array) {
             let temp = "";
             value.forEach(value => {
@@ -132,26 +142,18 @@ export default {
           }
 
           //防止对目前的key进行操作，再重载一次
-          this.load(this.value);
+          this.load(this.redis);
         });
       }
     },
-    set() {
-      if (this.type === "string") {
-        this.terminal.command =
-          "set " + this.value.key + " " + this.value.value;
-        this.command();
-      }
-    },
+    del() {},
     load(nv) {
       if (nv) {
-        this.client.type(nv.key, (err, v) => {
-          this.value.type = v;
+        this.client.type(nv, (err, v) => {
           this.type = v;
-          console.log(`type = ${v}`);
         });
 
-        this.client.ttl(nv.key, (err, value) => {
+        this.client.ttl(nv, (err, value) => {
           //启动定时器
           this.ttl = parseInt(value);
           if (this.ttl > -1) {
@@ -167,7 +169,7 @@ export default {
     }
   },
   watch: {
-    value(nv) {
+    key(nv) {
       //解析数据
       this.load(nv);
     }

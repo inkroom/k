@@ -17,12 +17,16 @@ const mutations = {
     db.get('hosts').remove({
       label: payload
     }).write();
-    return 1;
+    return new Promise(function (resolve, reject) {
+      // if (/* 异步操作成功 */){
+      resolve(value);
+      // } else {
+      //   reject(error);
+      // }
+    });
   },
   addHost(state, payload) {
-    state.hosts.push(payload);
-console.log(payload);
-    db.get('hosts').push(payload).write();
+
 
   }
 }
@@ -30,12 +34,28 @@ console.log(payload);
 const actions = {
   // payload 连接名称
   removeHost(context, payload) {
-    console.log('开始提交删除');
-     //context提交
-    return context.commit('removeHost', payload);
+    let index = state.hosts.findIndex((d) => d.label === payload);
+    if (index === -1) {
+      return new Promise((resolve, reject) => {
+        reject(1);
+      });
+    }
+    else {
+      state.hosts.splice(index, 1);
+      db.get('hosts').remove({
+        label: payload
+      }).write();
+      return new Promise((resolve, reject) => {
+        resolve(index);
+      });
+    }
   },
   addHost(context, payload) {
-    context.commit('addHost', payload);
+    state.hosts.push(payload);
+    db.get('hosts').push(payload).write();
+    return new Promise((resolve, reject) => {
+      resolve(1);
+    });
   }
 }
 

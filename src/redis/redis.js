@@ -15,6 +15,7 @@ client.keys('*', function (err, reply) {
 module.exports = {
     keys(host, port, cb) {
         
+        
         redis.createClient(port, host).keys('*', cb);
     },
     type(host, port, key, cb) {

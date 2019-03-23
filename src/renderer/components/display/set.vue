@@ -21,9 +21,9 @@
 <script>
 export default {
   props: {
-    value: {
-      type: Object,
-      required: false
+    redis: {
+      type: String,
+      required: true
     },
     client: {
       type: Object,
@@ -39,8 +39,8 @@ export default {
   },
   computed: {
     getRowCount() {
-      if (this.value && this.value.value) {
-        return Math.ceil(this.value.value.length / 3);
+      if (this.redis && this.value) {
+        return Math.ceil(this.value.length / 3);
       }
       return 0;
     }
@@ -53,12 +53,9 @@ export default {
       // );
       // this.load();
     },
-    filter(start, end) {
-      return this.value.value.slice(start, end);
-    },
     load() {
-      if (this.value&& this.value.type === 'set') {
-        this.client.sunion(this.value.key, (err, value) => {
+      if (this.redis ) {
+        this.client.sunion(this.redis, (err, value) => {
           if (err) console.log(err);
 
           let list = [];
@@ -73,13 +70,14 @@ export default {
           this.list = list;
 
           this.$set(this, "list", list);
-          this.$set(this.value, "value", value);
+          this.value = value;
+          // this.$set(this.value, "value", value);
         });
       }
     }
   },
   watch: {
-    value() {
+    redis() {
       this.load();
     }
   },

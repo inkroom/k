@@ -1,13 +1,22 @@
 <template>
-  <el-row v-if="value && type=='string'" style="margin-top:15px;">
-    <el-input type="textarea" v-model="value.value"></el-input>
+  <el-row style="margin-top:15px;">
+    <el-input type="textarea" v-model="value"></el-input>
   </el-row>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      value: ''
+    };
+  },
   props: {
-    value: {
-      type: Object,
+    redis: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
       required: false
     },
     client: {
@@ -16,9 +25,10 @@ export default {
     }
   },
   mounted() {
-    if (this.value&& this.value.type === 'string') {
-      this.client.get(this.value.key, (err, value) => {
-        this.$set(this.value, "value", value);
+    if (this.redis || (this.type && this.type === "string")) {
+      this.client.get(this.redis, (err, value) => {
+        this.value = value;
+        // this.$set(this, "value", value);
       });
     }
   }

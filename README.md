@@ -1,10 +1,12 @@
 # k
 
-> 基于electron的redis客户端
+基于electron的redis客户端，可以在linux、macOs、win下运行
 
 
 #### features
-- [ ] redis订阅发布
+- [x] redis订阅发布
+- [x] 提供命令行工具
+- [ ] 黑色主题
 
 #### Build Setup
 
@@ -23,6 +25,10 @@ npm test
 
 
 ```
+
+#### TODO
+
+- 各个板块内容自定义滚动条
 
 ---
 

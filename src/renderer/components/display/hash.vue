@@ -1,14 +1,14 @@
 <template>
   <el-row v-if="value" style="margin-top:15px;">
-    <el-row v-for="(item ,key) in value.value" :key="key" :gutter="10" style="margin-top:5px;">
-      <el-col :md="11">
-        <el-input v-model="key" @keyup.enter.native="renameField(key)"></el-input>
+    <el-row v-for="(item,key) in value" :key="key" :gutter="10" style="margin-top:5px;">
+      <el-col :md="11" :sm="11" :xs="11">
+        <el-input v-model="value[key]" @keyup.enter.native="renameField(key)"></el-input>
       </el-col>
       <!-- {{item}} -->
-      <el-col :md="11">
-        <el-input v-model="value.value[key]" @keyup.enter.native="set(key)"></el-input>
+      <el-col :md="11" :sm="11" :xs="11">
+        <el-input v-model="value[key]" @keyup.enter.native="set(key)"></el-input>
       </el-col>
-      <el-col :md="2">
+      <el-col :md="2" :sm="2" :xs="2">
         <div>
           <i class="el-icon-error" @click="delField(key)"></i>
         </div>
@@ -19,64 +19,67 @@
 <script>
 export default {
   props: {
-    value: {
-      type: Object,
-      required: false
+    redis: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
     },
     client: {
       type: Object,
       required: true
     }
   },
+  data() {
+    return { value: null };
+  },
   methods: {
     renameField(field) {
       //   this.$emit("command");
     },
     set(field) {
-      if (this.value.type === "hash")
+      if (this.type === "hash")
         this.$emit(
           "command",
-          `hset ${this.value.key} ${field} ${this.value.value[field]}`
+          `hset ${this.redis} ${field} ${this.value[field]}`
         );
-      else if (this.value.type === "zset") {
+      else if (this.type === "zset") {
       }
       this.load();
     },
     delField(field) {
-      if (this.value.type === "hash")
-        this.$emit("command", `HDEL ${this.value.key} ${field}`);
-      else if (this.value.type === "zset") {
-        this.$emit("command", `zrem ${this.value.key} ${field}`);
+      if (this.type === "hash")
+        this.$emit("command", `HDEL ${this.redis} ${field}`);
+      else if (this.type === "zset") {
+        this.$emit("command", `zrem ${this.redis} ${field}`);
       }
       this.load();
     },
     load() {
-      if (this.value&& this.value.type === 'hash'&& this.value.type === 'zset') {
-        if (this.value.type === "hash") {
-          this.client.hgetall(this.value.key, (err, value) => {
-            this.$set(this.value, "value", value);
+      console.log(`type = ${this.type}`)
+      if (this.redis && (this.type === "hash" || this.type === "zset")) {
+        if (this.type === "hash") {
+          this.client.hgetall(this.redis, (err, value) => {
+            this.$set(this, "value", value);
           });
-        } else if (this.value.type === "zset") {
-          this.client.zrange(
-            this.value.key,
-            0,
-            -1,
-            "WITHSCORES",
-            (err, value) => {
-              if (err) console.log(err);
-              let res = {};
-              for (let i = 0; i < value.length; i += 2) {
-                res[value[i]] = value[i + 1];
-              }
-              this.$set(this.value, "value", res);
+        } else if (this.type === "zset") {
+          this.client.zrange(this.redis, 0, -1, "WITHSCORES", (err, value) => {
+            if (err) console.log(err);
+            let res = {};
+            for (let i = 0; i < value.length; i += 2) {
+              res[value[i]] = value[i + 1];
             }
-          );
+            console.log(res);
+            this.$set(this, "value", res);
+          });
         }
       }
     }
   },
   watch: {
-    value() {
+    redis() {
       this.load();
     }
   },
