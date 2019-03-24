@@ -28,7 +28,8 @@ npm test
 
 #### TODO
 
-- 各个板块内容自定义滚动条
+- tree组件使用预构造redis client，实现认证和切换数据库；支持promise以及同步
+- 实现自定义主题方案功能
 
 ---
 
