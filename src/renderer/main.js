@@ -8,8 +8,10 @@ import redis from '../redis/redis';
 import db from '../datastore/index';
 
 import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
+// import "element-ui/lib/theme-chalk/index.css";
 
+// import "../../theme/index.css";
+import 'element-theme-dark';
 Vue.use(ElementUI);
 
 

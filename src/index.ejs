@@ -1,35 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>k-redis-GUI</title>
-    <style>
-    html,body{
-  height: 100%;
-}
-    *{
-      margin:0;padding:0;
-    }
-    #app{
-      height:100%;
-    }
-    </style>
-    <% if (htmlWebpackPlugin.options.nodeModules) { %>
-      <!-- Add `node_modules/` to global paths so `require` works properly in development -->
-      <script>
-        require('module').globalPaths.push('<%= htmlWebpackPlugin.options.nodeModules.replace(/\\/g, '\\\\') %>')
-      </script>
-    <% } %>
-  </head>
-  <body>
-    <div id="app" ></div>
-    <!-- Set `__static` path to static files in production -->
-    <% if (!process.browser) { %>
-      <script>
-        if (process.env.NODE_ENV !== 'development') window.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
-      </script>
-    <% } %>
 
-    <!-- webpack builds are automatically injected -->
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>k-redis-GUI</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      /* background-color: rgb(69, 73, 74); */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      color: rgba(238, 204, 204, 0.74);
+    }
+
+    .el-scrollbar__wrap {
+      overflow-x: hidden !important;
+    }
+
+    #app {
+      height: 100%;
+    }
+  </style>
+  <% if (htmlWebpackPlugin.options.nodeModules) { %>
+  <!-- Add `node_modules/` to global paths so `require` works properly in development -->
+  <script>
+    require('module').globalPaths.push('<%= htmlWebpackPlugin.options.nodeModules.replace(/\\/g, '\\\\') %>')
+  </script>
+  <% } %>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- Set `__static` path to static files in production -->
+  <% if (!process.browser) { %>
+  <script>
+    if (process.env.NODE_ENV !== 'development') window.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  </script>
+  <% } %>
+
+  <!-- webpack builds are automatically injected -->
+</body>
+
 </html>

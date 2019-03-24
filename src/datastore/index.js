@@ -35,6 +35,11 @@ const db = DataStore(adapter, {
 if (!db.has('hosts').value()) {
     db.set('hosts', []).write()
 }
+
+//系统配置
+if(!db.has('setting').value()){
+    db.set('setting',{exitNotConfirm:true}).write();
+}
 export default db
 // module.exports = {db:db};
 //   export default db;

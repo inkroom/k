@@ -2,45 +2,90 @@
 .el-scrollbar__wrap {
   overflow-x: hidden;
 }
-.el-tabs__content:empty{
+.el-tabs__content:empty {
   border: none !important;
 }
+.el-main {
+  padding: 0 !important;
+  overflow: hidden !important;
+  position: relative;
+}
+.el-tabs {
+  height: 100%;
+}
+
+.el-tabs__header {
+  position: absolute !important;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 120;
+}
+.el-tabs__content {
+  margin-top: 38px;
+}
+.el-tab-pane {
+  max-height: 80%;
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+/* .el-scrollbar__thumb {
+  background-color: black !important;
+} */
 </style>
 
 <template>
   <el-container style="height:100%">
     <el-aside width="250px" class="left">
-      <tree @leaf-click="leafClick"></tree>
+      <tree @leaf-click="leafClick" @key-remove="keyRemove"></tree>
       <div style="position:fixed;bottom:5px">
-        <el-button size="small" style="bottom:5px;" @click="dialog.add_host.visible = true">添加连接</el-button>
+        <el-button
+          size="small"
+          style="bottom:5px;"
+          type="primary"
+          @click="dialog.add_host.visible = true"
+        >添加连接</el-button>
         <el-button size="small" style="bottom:5px;" @click="dialog.subscribe.visible = true">订阅</el-button>
       </div>
     </el-aside>
 
-    <el-main style="border:1px solid blue">
-      <el-tabs v-model="tabs.now" type="border-card" closable @tab-remove="tabRemove" v-if="tabs.keys.length>0">
-        <el-tab-pane
-          :label="getTabKey(item)"
-          :name="getTabKey(item)"
-          :key="getTabKey(item)"
-          v-for="(item) in tabs.keys"
+    <el-main>
+      <el-scrollbar style="height:100%;">
+        <el-tabs
+          v-model="tabs.now"
+          type="border-card"
+          closable
+          @tab-remove="tabRemove"
+          v-if="tabs.keys.length>0"
         >
-          <!-- <el-scrollbar style="height:80%;"> -->
+          <el-tab-pane
+            :label="getTabKey(item)"
+            :name="getTabKey(item)"
+            :key="getTabKey(item)"
+            v-for="(item) in tabs.keys"
+          >
             <subscribe v-if="item.channel" :client="item.client" :channel="item.channel"></subscribe>
             <display :redis="item.key" :client="item.client" v-else></display>
-          <!-- </el-scrollbar> -->
-        </el-tab-pane>
-      </el-tabs>
+          </el-tab-pane>
+        </el-tabs>
+      </el-scrollbar>
     </el-main>
 
     <!-- 添加host弹出框 -->
-    <el-dialog :visible.sync="dialog.add_host.visible">
+    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接">
       <el-form label-width="100px" status-icon>
         <el-form-item label="连接名：" prop="name">
           <el-input placeholder="如：localhost" size="small" v-model="dialog.add_host.form.label"></el-input>
         </el-form-item>
         <el-form-item label="连接地址：" prop="host">
           <el-input placeholder="仅支持ipv4" size="small" v-model="dialog.add_host.form.host"></el-input>
+        </el-form-item>
+        <el-form-item label="连接端口：" prop="host">
+          <el-input placeholder size="small" v-model="dialog.add_host.form.port"></el-input>
+        </el-form-item>
+        <el-form-item label="数据库：" prop="host">
+          <el-input placeholder="数据库序号" size="small" v-model="dialog.add_host.form.index"></el-input>
         </el-form-item>
         <el-form-item label="认证密码：">
           <el-input placeholder="可选" size="small" v-model="dialog.add_host.form.password"></el-input>
@@ -51,7 +96,7 @@
       </el-form>
     </el-dialog>
     <!-- 添加订阅发布框 -->
-    <el-dialog :visible="dialog.subscribe.visible" title="添加消息订阅">
+    <el-dialog :visible.sync="dialog.subscribe.visible" title="添加消息订阅">
       <el-form label-width="100px" status-icon>
         <el-form-item label="连接：" prop="name">
           <el-select
@@ -84,7 +129,7 @@ import Tree from "./tree";
 import Display from "./display/display";
 import Subscribe from "./display/subscribe";
 
-import { setTimeout } from "timers";
+import { isIPv4 } from "net";
 
 export default {
   name: "landing-page",
@@ -102,7 +147,9 @@ export default {
           form: {
             label: "",
             host: "",
+            port: "",
             password: "",
+            index: 0,
             leaf: false
           }
         },
@@ -113,55 +160,11 @@ export default {
             label: ""
           }
         }
-      },
-      rule: {
-        name: [{ required: true, message: "请输入连接名称", trigger: "blur" }],
-        host: [
-          {
-            validator: (rule, value, callback) => {
-              if (value === "") {
-                callback(new Error("连接地址不能为空"));
-                return;
-              }
-              let preg = new RegExp(
-                "([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})"
-              );
-              let res = preg.exec(value);
-              if (!res || res.length != 5) {
-                callback(new Error("只支持ipv4"));
-                return;
-              } else {
-                if (
-                  res[1] < 0 ||
-                  res[1] > 255 ||
-                  res[2] < 0 ||
-                  res[2] > 255 ||
-                  res[3] < 0 ||
-                  res[3] > 255 ||
-                  res[4] < 0 ||
-                  res[4] > 255
-                ) {
-                  callback(new Error("只支持ipv4"));
-                  return;
-                }
-              }
-
-              callback();
-            },
-            trigger: "blur"
-          }
-        ]
       }
     };
   },
   components: { Tree, Display, Subscribe },
   methods: {
-    tabRemove(targetName) {
-      let index = this.tabs.keys.findIndex(
-        d => this.getTabKey(d) === targetName
-      );
-      this.tabs.keys.splice(index, 1);
-    },
     subscribe() {
       //订阅频道
       if (this.dialog.subscribe.form.label == "") {
@@ -190,6 +193,30 @@ export default {
         this.dialog.subscribe.visible = false;
       }
     },
+    keyRemove(parent, key) {
+      //key被删除
+      //查找对应的tab
+      console.log("key");
+      console.log(key);
+
+      let tab = this.getTabKey(key);
+      this.tabRemove(tab);
+    },
+    tabRemove(targetName) {
+      let index = this.tabs.keys.findIndex(
+        d => this.getTabKey(d) === targetName
+      );
+      //换另一个选中
+      if (index !== this.tabs.keys.length - 1) {
+        //选中下一个
+        this.tabs.now = this.getTabKey(this.tabs.keys[index + 1]);
+      } else if (index !== 0) {
+        //不是下一个，选择上一个
+        this.tabs.now = this.getTabKey(this.tabs.keys[index - 1]);
+      }
+      //移除当前
+      this.tabs.keys.splice(index, 1);
+    },
     getTabKey(item) {
       if (item.channel) return "订阅：" + item.label + "-" + item.channel;
       if (item.key) return item.label + "-" + item.key;
@@ -201,54 +228,39 @@ export default {
       }
     },
     add() {
-      if (this.dialog.add_host.form.name === "") {
+      console.log(this.dialog.add_host.form);
+      console.log(this.dialog.add_host.form.name);
+      console.log(this.dialog.add_host.form.name === "");
+      if (this.dialog.add_host.form.label === "") {
         this.$message("连接名称不能为空");
-      } else if (this.dialog.add_host.form.host === "") {
+      } else if (!isIPv4(this.dialog.add_host.form.host)) {
         this.$message("仅支持ipv4");
+      } else if (isNaN(parseInt(this.dialog.add_host.form.port))) {
+        this.$message("端口1-25535");
+      } else if (
+        parseInt(this.dialog.add_host.form.port) < 1 ||
+        parseInt(this.dialog.add_host.form.port) > 65535
+      ) {
+        console.log(parseInt(this.dialog.add_host.form.port));
+        this.$message("端口1-25535");
       } else {
-        let preg = new RegExp(
-          "([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})"
-        );
-        let res = preg.exec(this.dialog.add_host.form.host);
-        if (!res || res.length != 5) {
-          this.$message("仅支持ipv4");
-          return;
-        } else {
-          if (
-            res[1] < 0 ||
-            res[1] > 255 ||
-            res[2] < 0 ||
-            res[2] > 255 ||
-            res[3] < 0 ||
-            res[3] > 255 ||
-            res[4] < 0 ||
-            res[4] > 255
-          ) {
-            this.$message("仅支持ipv4");
-            return;
-          }
-        }
+        this.$store
+          .dispatch(
+            "addHost",
+            JSON.parse(JSON.stringify(this.dialog.add_host.form))
+          )
+          .then(value => {
+            this.dialog.add_host.visible = false;
+
+            this.dialog.add_host.form.label = "";
+            this.dialog.add_host.form.host = "";
+            this.dialog.add_host.form.password = "";
+
+            this.$message("添加成功");
+          });
       }
-
-      this.$store
-        .dispatch(
-          "addHost",
-          JSON.parse(JSON.stringify(this.dialog.add_host.form))
-        )
-        .then(value => {
-          this.$message("添加成功");
-          this.dialog.add_host.visible = false;
-
-          this.dialog.add_host.form.label = "";
-          this.dialog.add_host.form.host = "";
-          this.dialog.add_host.form.password = "";
-        });
-
-      // this.$db.get("host").push(this.new_host);
     },
     leafClick(data, client) {
-      console.log("查找之前");
-      console.log(this.tabs.keys);
       // 判断当前是否有数据
       let index = this.tabs.keys.findIndex(d => {
         console.log(d);
@@ -279,9 +291,7 @@ export default {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
-
 .left {
-  border: 1px solid red;
+  border-right: 1px solid rgb(170, 183, 197);
 }
 </style>

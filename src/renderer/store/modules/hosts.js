@@ -10,51 +10,56 @@ console.log(state.hosts);
 
 const mutations = {
   removeHost(state, payload) {
-    console.log(`payload=${payload}`)
-    let index = state.hosts.findIndex((d) => d.label === payload);
-    console.log(`payload=${payload},index=${index}`)
-    state.hosts.splice(index, 1);
-    db.get('hosts').remove({
-      label: payload
-    }).write();
-    return new Promise(function (resolve, reject) {
-      // if (/* 异步操作成功 */){
-      resolve(value);
-      // } else {
-      //   reject(error);
-      // }
+    console.log(payload)
+    let index = state.hosts.findIndex((d) => {
+      console.log('-------')
+      console.log(d);
+      console.log(payload);
+      return d.label === payload;
     });
+    console.log(state.hosts);
+    console.log(`删除index=${index}`);
+    if (index === -1) {
+      // return new Promise((resolve, reject) => {
+      //   reject(index);
+      // });
+    }
+    else {
+      let temp = state.hosts.slice();
+      temp.splice(index, 1);
+      state.hosts = temp;
+      // state.hosts.splice(index, 1);
+      db.get('hosts').remove({
+        label: payload
+      }).write();
+      // return new Promise((resolve, reject) => {
+      //   resolve(index);
+      // });
+    }
   },
-  addHost(state, payload) {
-
-
+  addHost(state , payload) {
+    console.log(payload);
+    console.log(`vuex添加=${payload}`)
+    state.hosts.push(Object.assign({}, payload));
+    db.get('hosts').push(payload).write();
+    // return new Promise((resolve, reject) => {
+    //   resolve(1);
+    // });
   }
 }
 
 const actions = {
   // payload 连接名称
   removeHost(context, payload) {
-    let index = state.hosts.findIndex((d) => d.label === payload);
-    if (index === -1) {
-      return new Promise((resolve, reject) => {
-        reject(1);
-      });
-    }
-    else {
-      state.hosts.splice(index, 1);
-      db.get('hosts').remove({
-        label: payload
-      }).write();
-      return new Promise((resolve, reject) => {
-        resolve(index);
-      });
-    }
-  },
-  addHost(context, payload) {
-    state.hosts.push(payload);
-    db.get('hosts').push(payload).write();
     return new Promise((resolve, reject) => {
-      resolve(1);
+      context.commit('removeHost', payload);
+      resolve();
+    });
+  },
+  addHost(context , payload) {
+    return new Promise((resolve, reject) => {
+      context.commit('addHost', payload);
+      resolve();
     });
   }
 }

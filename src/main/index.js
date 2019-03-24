@@ -28,7 +28,9 @@ function createWindow () {
     height: 563,
     useContentSize: true,
     width: 1000,
-    icon:path.resolve(__dirname,'../../build/icons/256x256.png')
+    icon:path.resolve(__dirname,'../../build/icons/256x256.png'),
+    backgroundColor:'rgb(34, 41, 51)',
+    frame:process.env.NODE_ENV === 'development'
   })
 
   mainWindow.loadURL(winURL)

@@ -6,11 +6,17 @@
   background-color: white;
   color: black !important;
 }
+/* .el-scrollbar__thumb {
+  background-color: black !important;
+} */
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
 </style>
 
 
 <template>
-  <el-scrollbar style="height:100%">
+  <div style="height:100%;">
     <el-row v-if="redis">
       <el-col :md="2" :sm="2" :xs="2">
         <span>name：</span>
@@ -56,15 +62,19 @@
         style="margin-top:15px;margin-bottom:15px;"
         @keyup.enter.native="command"
       ></el-input>
-      <el-input
+      <el-scrollbar style="height:300px;">
+        <div v-html="terminal.result" style="margin-bottom:30px;"></div>
+      </el-scrollbar>
+
+      <!-- <el-input
         type="textarea"
         v-model="terminal.result"
         disabled
         rows="15"
         style="color:black !important;"
-      ></el-input>
+      ></el-input>-->
     </el-row>
-  </el-scrollbar>
+  </div>
 </template>
 
 <script>
@@ -72,6 +82,7 @@ import KString from "./string";
 import KHash from "./hash";
 import KList from "./list";
 import KSet from "./set";
+import { isNumber } from "util";
 
 export default {
   components: { KString, KHash, KList, KSet },
@@ -91,7 +102,7 @@ export default {
       type: "",
       ttl: "-1",
       name: "",
-      value:null,
+      value: null,
       terminal: {
         command: "",
         result: ""
@@ -133,18 +144,37 @@ export default {
           if (value instanceof Array) {
             let temp = "";
             value.forEach(value => {
-              temp += value;
-              temp += "\n";
+              // console.log(`value = ${value}`)
+              temp += value.replace("\n", "<br/>");
+              temp += "<br/>";
             });
             this.terminal.result = temp;
-          } else {
+          } else if (isNumber(value)) {
             this.terminal.result = value;
+          } else {
+            this.terminal.result = value.replace(
+              new RegExp("\\n", "g"),
+              "<br/>"
+            );
           }
-
           //防止对目前的key进行操作，再重载一次
           this.load(this.redis);
         });
       }
+    },
+    rename() {
+      this.$prompt("请输入新的key", "", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /.+/,
+        inputErrorMessage: "key格式不正确"
+      })
+        .then(value => {
+          this.terminal.command = "rename " + this.key + " " + value;
+          this.key = value;
+          this.command();
+        })
+        .catch(() => {});
     },
     del() {},
     load(nv) {
@@ -167,12 +197,12 @@ export default {
         });
       }
     }
-  },
-  watch: {
-    key(nv) {
-      //解析数据
-      this.load(nv);
-    }
   }
+  // watch: {
+  //   redis(nv) {
+  //     //解析数据
+  //     this.load(nv);
+  //   }
+  // }
 };
 </script>

@@ -6,7 +6,7 @@
 #### features
 - [x] redis订阅发布
 - [x] 提供命令行工具
-- [ ] 黑色主题
+- [x] [黑色主题](https://github.com/Arattian/element-theme-dark)
 
 #### Build Setup
 
