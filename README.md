@@ -9,6 +9,7 @@
 - [x] 提供命令行工具
 - [x] [黑色主题](https://github.com/Arattian/element-theme-dark)
 - [ ] 实现自定义主题方案功能
+- [ ] 背景图片自动切换
 
 #### Build Setup
 
