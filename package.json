@@ -1,6 +1,6 @@
 {
   "name": "k",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "inkroom <m18942819324@163.com>",
   "description": "基于electron的redis客户端",
   "license": "MIT",
@@ -44,16 +44,18 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "static/img/256x256.png"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "static/img/256x256.png"
     },
     "linux": {
-      "icon": "build/icons"
+      "target":["AppImage"],
+      "icon": "build/icons/"
     }
   },
   "dependencies": {
+    "bluebird": "^3.5.3",
     "element-ui": "^2.6.1",
     "fs-extra": "^7.0.1",
     "lowdb": "^1.0.0",

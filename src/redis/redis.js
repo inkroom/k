@@ -1,5 +1,5 @@
 const redis = require('redis');
-
+const bluebird = require('bluebird');
 let client = redis.createClient(6379, '127.0.0.1');
 
 client.keys('*', function (err, reply) {
@@ -8,33 +8,12 @@ client.keys('*', function (err, reply) {
         console.log(element);
     });
 })
-
-
-
+//promise化
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
 
 module.exports = {
-    keys(host, port, cb) {
-        
-        
-    },
-    type(host, port, key, cb) {
-        redis.createClient(port, host).type(key,cb)
-    },
-    ttl(host, port, key, cb) {
-        redis.createClient(port, host).ttl(key, cb);
-    },
-    get(host, port, key, cb) {
-        redis.createClient(port, host).get(key, cb);
-    },
-    set(host, port, key,value, cb) {
-        redis.createClient(port, host).set(key,value,cb);
-        redis.createClient().multi('get 123').exec()
-    },
-    exec(host, port, command,args, cb){
 
-
-        // redis.createClient(port, host).zrange(key,0,-1, .sendCommand(command,args,cb);
-    },
-    redis:redis,
+    redis: redis,
 
 }

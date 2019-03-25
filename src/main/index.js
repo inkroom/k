@@ -19,7 +19,7 @@ let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
-console.log(path.resolve(__dirname,'../../build/icons/256x256.png'))
+  console.log(`icon=${__static}/img/logo.png`)
 function createWindow () {
   /**
    * Initial window options
@@ -28,8 +28,8 @@ function createWindow () {
     height: 563,
     useContentSize: true,
     width: 1000,
-    icon:path.resolve(__dirname,'../../build/icons/256x256.png'),
-    backgroundColor:'rgb(34, 41, 51)',
+    icon:`${__static}/img/logo.png`,
+    backgroundColor:'#222933',
     frame:process.env.NODE_ENV === 'development'
   })
 

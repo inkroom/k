@@ -1,7 +1,4 @@
 <style>
-.el-scrollbar__wrap {
-  overflow-x: hidden;
-}
 .el-tabs__content:empty {
   border: none !important;
 }
@@ -38,16 +35,9 @@
 <template>
   <el-container style="height:100%">
     <el-aside width="250px" class="left">
-      <tree @leaf-click="leafClick" @key-remove="keyRemove"></tree>
-      <div style="position:fixed;bottom:5px">
-        <el-button
-          size="small"
-          style="bottom:5px;"
-          type="primary"
-          @click="dialog.add_host.visible = true"
-        >添加连接</el-button>
+      <tree @leaf-click="leafClick" @key-remove="keyRemove">
         <el-button size="small" style="bottom:5px;" @click="dialog.subscribe.visible = true">订阅</el-button>
-      </div>
+      </tree>
     </el-aside>
 
     <el-main>
@@ -72,31 +62,8 @@
       </el-scrollbar>
     </el-main>
 
-    <!-- 添加host弹出框 -->
-    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接">
-      <el-form label-width="100px" status-icon>
-        <el-form-item label="连接名：" prop="name">
-          <el-input placeholder="如：localhost" size="small" v-model="dialog.add_host.form.label"></el-input>
-        </el-form-item>
-        <el-form-item label="连接地址：" prop="host">
-          <el-input placeholder="仅支持ipv4" size="small" v-model="dialog.add_host.form.host"></el-input>
-        </el-form-item>
-        <el-form-item label="连接端口：" prop="host">
-          <el-input placeholder size="small" v-model="dialog.add_host.form.port"></el-input>
-        </el-form-item>
-        <el-form-item label="数据库：" prop="host">
-          <el-input placeholder="数据库序号" size="small" v-model="dialog.add_host.form.index"></el-input>
-        </el-form-item>
-        <el-form-item label="认证密码：">
-          <el-input placeholder="可选" size="small" v-model="dialog.add_host.form.password"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="add">添加连接</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
     <!-- 添加订阅发布框 -->
-    <el-dialog :visible.sync="dialog.subscribe.visible" title="添加消息订阅">
+    <el-dialog :visible.sync="dialog.subscribe.visible" title="添加消息订阅" width="350px">
       <el-form label-width="100px" status-icon>
         <el-form-item label="连接：" prop="name">
           <el-select
@@ -129,7 +96,6 @@ import Tree from "./tree";
 import Display from "./display/display";
 import Subscribe from "./display/subscribe";
 
-import { isIPv4 } from "net";
 
 export default {
   name: "landing-page",
@@ -142,17 +108,7 @@ export default {
         ]
       },
       dialog: {
-        add_host: {
-          visible: false,
-          form: {
-            label: "",
-            host: "",
-            port: "",
-            password: "",
-            index: 0,
-            leaf: false
-          }
-        },
+       
         subscribe: {
           visible: false,
           form: {
@@ -227,39 +183,7 @@ export default {
         this.tabs.now = "订阅：" + item.label + "-" + item.channel;
       }
     },
-    add() {
-      console.log(this.dialog.add_host.form);
-      console.log(this.dialog.add_host.form.name);
-      console.log(this.dialog.add_host.form.name === "");
-      if (this.dialog.add_host.form.label === "") {
-        this.$message("连接名称不能为空");
-      } else if (!isIPv4(this.dialog.add_host.form.host)) {
-        this.$message("仅支持ipv4");
-      } else if (isNaN(parseInt(this.dialog.add_host.form.port))) {
-        this.$message("端口1-25535");
-      } else if (
-        parseInt(this.dialog.add_host.form.port) < 1 ||
-        parseInt(this.dialog.add_host.form.port) > 65535
-      ) {
-        console.log(parseInt(this.dialog.add_host.form.port));
-        this.$message("端口1-25535");
-      } else {
-        this.$store
-          .dispatch(
-            "addHost",
-            JSON.parse(JSON.stringify(this.dialog.add_host.form))
-          )
-          .then(value => {
-            this.dialog.add_host.visible = false;
-
-            this.dialog.add_host.form.label = "";
-            this.dialog.add_host.form.host = "";
-            this.dialog.add_host.form.password = "";
-
-            this.$message("添加成功");
-          });
-      }
-    },
+   
     leafClick(data, client) {
       // 判断当前是否有数据
       let index = this.tabs.keys.findIndex(d => {

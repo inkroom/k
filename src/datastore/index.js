@@ -24,7 +24,7 @@ if (process.type !== 'renderer') {
 }
 
 console.log(`文件路径=${path.join(STORE_PATH, '/data.json')}`);
-const adapter = new FileSync(path.join(STORE_PATH, '/data.json'))
+const adapter = new FileSync(path.join(STORE_PATH, '/k_redis.json'))
 
 const db = DataStore(adapter, {
     autosave: true
@@ -38,7 +38,7 @@ if (!db.has('hosts').value()) {
 
 //系统配置
 if(!db.has('setting').value()){
-    db.set('setting',{exitNotConfirm:true}).write();
+    db.set('setting',{exitNotConfirm:false}).write();
 }
 export default db
 // module.exports = {db:db};

@@ -12,6 +12,10 @@ import ElementUI from "element-ui";
 
 // import "../../theme/index.css";
 import 'element-theme-dark';
+
+
+console.log(require ('../../package.json'));
+
 Vue.use(ElementUI);
 
 

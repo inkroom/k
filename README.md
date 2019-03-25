@@ -4,9 +4,11 @@
 
 
 #### features
+
 - [x] redis订阅发布
 - [x] 提供命令行工具
 - [x] [黑色主题](https://github.com/Arattian/element-theme-dark)
+- [ ] 实现自定义主题方案功能
 
 #### Build Setup
 
@@ -20,16 +22,16 @@ npm run dev
 # build electron application for production
 npm run build
 
-# run unit & end-to-end tests
-npm test
 
 
 ```
 
-#### TODO
+#### download
 
-- tree组件使用预构造redis client，实现认证和切换数据库；支持promise以及同步
-- 实现自定义主题方案功能
+下载地址：[https://github.com/inkroom/k/releases](https://github.com/inkroom/k/releases)
+
+ps:**因本人基本只使用linux系统，因此只提供AppImage格式，其余格式请clone后自行打包**
+ps: deb格式图标老是不出来，目前尚未解决
 
 ---
 

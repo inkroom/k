@@ -1,5 +1,4 @@
 <style>
-import { resolve } from 'url';
 .custom-tree-node {
   flex: 1;
   display: flex;
@@ -12,34 +11,111 @@ import { resolve } from 'url';
 
 <template>
   <!-- :data="hosts" -->
-  <el-tree
-    :data="$store.state.hosts.hosts"
-    :props="defaultProps"
-    :load="load"
-    node-key="label"
-    @node-click="handleNodeClick"
-    :expand-on-click-node="true"
-    lazy
-    ref="tree"
-  >
-    <div class="custom-tree-node" slot-scope="{ node, data }">
-      <span>{{ node.label }}</span>
-      <span style="float:right">
-        <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
-        <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level==1"></i>
-        <i class="el-icon-delete" @click="() => remove(node,data)"></i>
-      </span>
+  <div style="100%">
+    <el-tree
+      :data="$store.state.hosts.hosts"
+      :props="defaultProps"
+      :load="load"
+      node-key="label"
+      @node-click="handleNodeClick"
+      :expand-on-click-node="true"
+      lazy
+      ref="tree"
+    >
+      <div class="custom-tree-node" slot-scope="{ node, data }">
+        <span>{{ node.label }}</span>
+        <span style="float:right">
+          <i class="el-icon-edit" @click="() => edit(node,data)" v-if="node.level===1"></i>
+          <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
+          <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level===1"></i>
+          <i class="el-icon-delete" @click="() => remove(node,data)"></i>
+        </span>
+      </div>
+    </el-tree>
+    <div style="position:fixed;bottom:5px">
+      <el-button
+        size="small"
+        style="bottom:5px;"
+        type="primary"
+        @click="dialog.add_host.visible = true"
+      >添加连接</el-button>
+      <slot></slot>
     </div>
-  </el-tree>
+
+    <!-- 添加host弹出框 -->
+    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接" width="500px">
+      <el-form label-width="100px" status-icon>
+        <el-form-item label="连接名：" prop="name">
+          <el-input
+            placeholder="如：localhost"
+            size="small"
+            :disabled="dialog.add_host.disabled"
+            v-model="dialog.add_host.form.label"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="连接地址：" prop="host">
+          <el-input
+            placeholder="仅支持ipv4"
+            size="small"
+            :disabled="dialog.add_host.disabled"
+            v-model="dialog.add_host.form.host"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="连接端口：" prop="host">
+          <el-input
+            placeholder
+            size="small"
+            :disabled="dialog.add_host.disabled"
+            v-model="dialog.add_host.form.port"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="数据库：" prop="host">
+          <el-input
+            placeholder="数据库序号"
+            size="small"
+            :disabled="dialog.add_host.disabled"
+            v-model="dialog.add_host.form.index"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="认证密码：">
+          <el-input
+            placeholder="可选"
+            size="small"
+            :disabled="dialog.add_host.disabled"
+            v-model="dialog.add_host.form.password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="add">添加连接</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
+import { isIPv4 } from "net";
+
 export default {
   data() {
-    //FIXME: 未知原因导致数据存储突然多出一层
+    //因为vuex分文件存储，多出一层是文件名
     console.log(this.$store.state.hosts.hosts);
     //获取存储的host
     return {
+      dialog: {
+        add_host: {
+          visible: false,
+          disabled: false,
+          form: {
+            label: "",
+            host: "",
+            port: "",
+            password: "",
+            index: 0,
+            leaf: false
+          }
+        }
+      },
       defaultProps: {
         children: "children",
         label: "label",
@@ -49,106 +125,79 @@ export default {
   },
   methods: {
     createClientSync(data) {
+      let options = {
+        port: data.port,
+        host: data.host
+      };
+      if (data.index !== 0) {
+        options.db = data.index;
+      }
+      if (data.password !== "") {
+        options.password = data.password;
+      }
       let client = this.$redis.redis
-        .createClient(data.port, data.host)
+        .createClient(options)
         .on("error", err => {
           this.$message.error(`${data.label}连接出现错误`);
         })
-        .on("ready", () => {
-          //密码认证
-          if (data.password && data.password !== "") {
-            client.auth(data.password, err => {
-              if (err) {
-                console.log(err);
-                this.$message.error(`${data.label}认证失败`);
-                client.quit();
-              } else {
-                client.select(data.index, err => {
-                  if (err) {
-                    console.log(err);
-                    this.$message.error(
-                      `${data.label}切换到第${data.index}数据库失败`
-                    );
-                    client.quit();
-                  }
-                });
-              }
-            });
-          }
-          //切换到指定数据库
-          if (data.index !== 0) {
-            client.select(data.index, err => {
-              if (err) {
-                console.log(err);
-                this.$message.error(
-                  `${data.label}切换到第${data.index}数据库失败`
-                );
-                client.quit();
-              }
-            });
-          }
+        .on("end", () => {
+          this.$alert(`${data.label}连接已断开`);
         });
       data.client = client;
       return client;
     },
-    createClient(data){
-let client = this.$redis.redis
-        .createClient(data.port, data.host)
-        .on("error", err => {
-          this.$message.error(`${data.label}连接出现错误`);
-        })
-        .on("ready", () => {
-          //密码认证
-          if (data.password && data.password !== "") {
-            client.auth(data.password, err => {
-              if (err) {
-                console.log(err);
-                this.$message.error(`${data.label}认证失败`);
-                client.quit();
-              } else {
-                client.select(data.index, err => {
-                  if (err) {
-                    console.log(err);
-                    this.$message.error(
-                      `${data.label}切换到第${data.index}数据库失败`
-                    );
-                    client.quit();
-                  }
-                });
-              }
-            });
-          }
-          //切换到指定数据库
-          if (data.index !== 0) {
-            client.select(data.index, err => {
-              if (err) {
-                console.log(err);
-                this.$message.error(
-                  `${data.label}切换到第${data.index}数据库失败`
-                );
-                client.quit();
-              }
-            });
-          }
-        });
-      data.client = client;
-      return new Promise((resolve,reject)=>{
-        
-      })
+    createClient(data) {
+      return new Promise((resolve, reject) => {
+        let options = {
+          port: data.port,
+          host: data.host
+        };
+        if (data.index !== 0) {
+          options.db = data.index;
+        }
+        if (data.password !== "") {
+          options.password = data.password;
+        }
+        let client = this.$redis.redis
+          .createClient(options)
+          .on("error", err => {
+            this.$message.error(`${data.label}连接出现错误`);
+          })
+          .on("ready", () => {
+            resolve(client);
+          })
+          .on("end", () => {
+            this.$alert(`${data.label}连接已断开`);
+          });
+        data.client = client;
+      });
     },
     append(node, data) {},
     refresh(node, data) {
       if (node.level === 1) {
         //host
-        console.log(this.$redis);
-        let client = data.client || this.createClient(data);
-        client.keys("*", (err, value) => {
-          if (err) {
-            this.$message.error(`${data.label}刷新失败`);
-          } else {
-            console.log(value);
-          }
-        });
+        let client = data.client;
+        if (!client) {
+          this.createClient(data).then(client => {
+            client
+              .keys("*")
+              .then(value => {
+                console.log(value);
+              })
+              .catch(err => {
+                this.$message.error(`${data.label}刷新失败`);
+              });
+          });
+        } else {
+          client
+            .keys("*")
+            .then(value => {
+              console.log(value);
+            })
+            .catch(err => {
+              this.$message.error(`${data.label}刷新失败`);
+            });
+        }
       } else if (node.level === 1) {
         //key
       }
@@ -171,25 +220,17 @@ let client = this.$redis.redis
               this.$message("删除成功");
             })
             .catch(value => {
-              throw value;
               console.log(value);
               this.$message.error("删除失败");
             });
         });
       } else if (node.level === 2) {
-        //删除key
-
         this.$confirm("确认删除数据-" + data.label + "?", "删除", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          console.log("key remote");
-          console.log(node);
-          console.log(data);
-
           //删除key
-
           this.$refs.tree.remove(node);
           let client = data.client || data.parent.client;
           if (!client) {
@@ -208,6 +249,64 @@ let client = this.$redis.redis
         });
       }
     },
+    add() {
+      if (this.dialog.add_host.disabled) {
+        this.dialog.add_host.visible = false;
+        return;
+      }
+      console.log(this.dialog.add_host.form);
+      console.log(this.dialog.add_host.form.name);
+      console.log(this.dialog.add_host.form.name === "");
+      if (this.dialog.add_host.form.label === "") {
+        this.$message("连接名称不能为空");
+      } else if (!isIPv4(this.dialog.add_host.form.host)) {
+        this.$message("仅支持ipv4");
+      } else if (isNaN(parseInt(this.dialog.add_host.form.port))) {
+        this.$message("端口1-25535");
+      } else if (
+        parseInt(this.dialog.add_host.form.port) < 1 ||
+        parseInt(this.dialog.add_host.form.port) > 65535
+      ) {
+        console.log(parseInt(this.dialog.add_host.form.port));
+        this.$message("端口1-25535");
+      } else {
+        //判断重名
+        let index = this.$store.state.hosts.hosts.findIndex(
+          d => d.label === this.dialog.add_host.form.label
+        );
+        if (index !== -1) {
+          this.$message(`${this.dialog.add_host.form.label}已存在`);
+          return;
+        }
+
+        this.$store
+          .dispatch(
+            "addHost",
+            JSON.parse(JSON.stringify(this.dialog.add_host.form))
+          )
+          .then(value => {
+            this.dialog.add_host.visible = false;
+
+            this.dialog.add_host.form.label = "";
+            this.dialog.add_host.form.host = "";
+            this.dialog.add_host.form.password = "";
+
+            console.log("添加成功");
+            this.$message("添加成功");
+          });
+      }
+    },
+    edit(node, data) {
+      //构造新的数据
+      //不修改，只能删了重来
+      for (let key in data) {
+        this.dialog.add_host.form[key] = data[key];
+      }
+
+      //显示
+      this.dialog.add_host.disabled = true;
+      this.dialog.add_host.visible = true;
+    },
     handleNodeClick(data, node) {
       if (node.level === 2) {
         //叶子节点 ，也就是key
@@ -219,22 +318,17 @@ let client = this.$redis.redis
           port: node.parent.data.port
         };
 
-
-
         if (data.client) {
           //已有client
           this.$emit("leaf-click", key, data.client);
         } else {
-          //构造一个redis = client
-          let client = this.$redis.redis
-            .createClient(node.parent.data.port, node.parent.data.host)
-            .on("ready", () => {
-              //挂入缓存
-              data.client = client;
+          this.createClient(node.parent.data)
+            .then(client => {
               this.$emit("leaf-click", key, client);
               this.show = true;
             })
-            .on("error", () => {
+            .catch(err => {
+              console.log(err);
               this.$message(node.parent.data.label + "连接失败");
             });
         }
@@ -243,42 +337,80 @@ let client = this.$redis.redis
       } else {
         //非叶子节点
         //构造一个redis = client
-        let client = this.$redis.redis
-          .createClient(data.port, data.host)
-          .on("ready", () => {
-            this.$emit("leaf-click", data, client);
-            this.show = true;
-          })
-          .on("error", () => {
-            this.$message(data.label + "连接失败");
-          });
+
+        if (data.client) {
+          let key = {
+            label: data.label,
+            host: data.host,
+            port: data.port
+          };
+          //已有client
+          this.$emit("leaf-click", key, data.client);
+        } else {
+          this.createClient(data)
+            .then(client => {
+              this.$emit("leaf-click", key, client);
+              this.show = true;
+            })
+            .catch(() => {
+              console.log("触发连接");
+              this.$message(data.label + "连接失败");
+            });
+        }
       }
     },
     load(node, resolve) {
       if (node.level === 0) {
         resolve(this.$store.state.hosts.hosts);
       } else if (node.level === 1) {
-        this.$redis.keys(node.data.host, node.data.port, (err, reply) => {
-          if (err) {
-            this.$message("连接错误");
-            resolve([]);
-            return;
-          }
-          console.log(reply);
-          if (reply.length == 0) {
-            resolve([]);
-            return;
-          }
-          let result = [];
-          reply.forEach(element => {
-            result.push({
-              label: element,
-              leaf: true,
-              parent: node.parent.data[0] //不知道为什么是一个数组
+        if (node.client) {
+          node.client
+            .keysAsync("*")
+            .then(reply => {
+              if (reply.length == 0) {
+                resolve([]);
+              } else {
+                let result = [];
+                reply.forEach(element => {
+                  result.push({
+                    label: element,
+                    leaf: true,
+                    parent: node.parent.data[0] //不知道为什么是一个数组
+                  });
+                });
+                resolve(result);
+              }
+            })
+            .catch(err => {
+              resolve([]);
+              console.log(err);
+              this.$message.error(`${node.data.label}连接失败`);
             });
+        } else {
+          this.createClient(node.data).then(client => {
+            client
+              .keysAsync("*")
+              .then(reply => {
+                if (reply.length == 0) {
+                  resolve([]);
+                } else {
+                  let result = [];
+                  reply.forEach(element => {
+                    result.push({
+                      label: element,
+                      leaf: true,
+                      parent: node.parent.data[0] //不知道为什么是一个数组
+                    });
+                  });
+                  resolve(result);
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                this.$message.error(`${node.data.label}连接失败`);
+              });
           });
-          resolve(result);
-        });
+        }
       }
     }
   }

@@ -2,6 +2,11 @@
   <div id="app">
     <el-container style="height:100%">
       <el-header height="35px;">
+        <img
+          src="static/img/logo.png"
+          style="height:35px;vertical-align:middle;margin-left:-15px;"
+          alt="k-redis"
+        >
         <span class="title">{{ title }}</span>
         <span class="controller">
           <i class="el-icon-minus" @click="$electron.remote.getCurrentWindow().minimize()"></i>
@@ -16,7 +21,7 @@
       </el-main>
     </el-container>
     <!-- 退出程序dialog -->
-    <el-dialog :visible.sync="dialog.close.visible" title="退出">
+    <el-dialog :visible.sync="dialog.close.visible" title="退出" width="300px">
       <el-row style="margin-bottom:15px;">确认退出程序？</el-row>
       <el-checkbox style="margin-bottom:15px;" v-model="dialog.close.form.exitNotConfirm">下次不再询问</el-checkbox>
       <el-form label-width="100px" status-icon>
@@ -36,7 +41,7 @@ export default {
     //获取是否有退出相关配置信息
 
     console.log(this.$db.get("setting").value());
-
+    console.log(process.versions);
     return {
       title: this.$electron.remote.getCurrentWindow().getTitle(),
       dialog: {
@@ -60,7 +65,7 @@ export default {
       console.log("退出程序");
       console.log(this.$db.get("setting").value());
       // console.log(this.$electron);
-      this.$electron.remote.app.quit();
+      // this.$electron.remote.app.quit();
     }
   }
 };
@@ -88,6 +93,6 @@ export default {
   -webkit-app-region: no-drag;
 }
 .controller > i:hover {
-  background-color: rgb(55, 55, 61);
+  background-color: rgb(121, 121, 133);
 }
 </style>
