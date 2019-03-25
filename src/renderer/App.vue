@@ -65,7 +65,7 @@ export default {
       console.log("退出程序");
       console.log(this.$db.get("setting").value());
       // console.log(this.$electron);
-      // this.$electron.remote.app.quit();
+      this.$electron.remote.app.quit();
     }
   }
 };
