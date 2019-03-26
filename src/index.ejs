@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>k-redis - v0.1.1</title>
+  <title>k-redis - v0.2.0</title>
   <style>
     html,
     body {
@@ -15,6 +15,7 @@
       margin: 0;
       padding: 0;
       color: rgba(238, 204, 204, 0.74);
+      user-select:none;
     }
 
     .el-scrollbar__wrap {
@@ -24,6 +25,7 @@
     #app {
       height: 100%;
     }
+    
   </style>
   <% if (htmlWebpackPlugin.options.nodeModules) { %>
   <!-- Add `node_modules/` to global paths so `require` works properly in development -->
@@ -34,6 +36,8 @@
 </head>
 
 <body>
+
+
   <div id="app"></div>
   <!-- Set `__static` path to static files in production -->
   <% if (!process.browser) { %>

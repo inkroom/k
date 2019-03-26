@@ -30,7 +30,10 @@ function createWindow () {
     width: 1000,
     icon:`${__static}/img/logo.png`,
     backgroundColor:'#222933',
-    frame:process.env.NODE_ENV === 'development'
+    frame:process.env.NODE_ENV === 'development',
+    webPreferences:{
+      webSecurity:false
+    }
   })
 
   mainWindow.loadURL(winURL)

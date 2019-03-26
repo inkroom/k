@@ -30,16 +30,26 @@ const db = DataStore(adapter, {
     autosave: true
 })
 
-
 //初始化数据
 if (!db.has('hosts').value()) {
     db.set('hosts', []).write()
 }
 
 //系统配置
-if(!db.has('setting').value()){
-    db.set('setting',{exitNotConfirm:false}).write();
+if (!db.has('setting').value()) {
+    db.set('setting', {
+        exitNotConfirm: false
+    }).write();
 }
+// 背景图片
+if (!db.has('bg').value()) {
+    db.set('bg', {
+        type: "1",
+        interval: "",
+        dir: ""
+    }).write();
+}
+
 export default db
 // module.exports = {db:db};
 //   export default db;

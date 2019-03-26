@@ -25,9 +25,9 @@
       <div class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
         <span style="float:right">
-          <i class="el-icon-edit" @click="() => edit(node,data)" v-if="node.level===1"></i>
+          <!-- <i class="el-icon-edit" @click="() => edit(node,data)" v-if="node.level===1"></i> -->
           <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
-          <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level===1"></i>
+          <!-- <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level===1"></i> -->
           <i class="el-icon-delete" @click="() => remove(node,data)"></i>
         </span>
       </div>
