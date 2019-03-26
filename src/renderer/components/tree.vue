@@ -48,7 +48,7 @@
     </div>
 
     <!-- 添加host弹出框 -->
-    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接" width="500px">
+    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接" width="500px" >
       <el-form label-width="100px" status-icon>
         <el-form-item label="连接名：" prop="name">
           <el-input
@@ -283,6 +283,9 @@ export default {
           this.$message(`${this.dialog.add_host.form.label}已存在`);
           return;
         }
+        console.log('添加host')
+        console.log(this.dialog.add_host.form)
+        console.log(JSON.parse(JSON.stringify(this.dialog.add_host.form)))
 
         this.$store
           .dispatch(

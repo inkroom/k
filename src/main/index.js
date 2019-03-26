@@ -26,9 +26,11 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
+    height: 650,
     width: 1000,
+    minWidth:800,
+    minHeight:650,
+    useContentSize: true,
     icon:`${__static}/img/logo.png`,
     backgroundColor:'#222933',
     frame:process.env.NODE_ENV === 'development',
