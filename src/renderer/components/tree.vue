@@ -11,28 +11,33 @@
 
 <template>
   <!-- :data="hosts" -->
-  <div style="100%">
-    <el-tree
-      :data="$store.state.hosts.hosts"
-      :props="defaultProps"
-      :load="load"
-      node-key="label"
-      @node-click="handleNodeClick"
-      :expand-on-click-node="true"
-      lazy
-      ref="tree"
-    >
-      <div class="custom-tree-node" slot-scope="{ node, data }">
-        <span>{{ node.label }}</span>
-        <span style="float:right">
-          <!-- <i class="el-icon-edit" @click="() => edit(node,data)" v-if="node.level===1"></i> -->
-          <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
-          <!-- <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level===1"></i> -->
-          <i class="el-icon-delete" @click="() => remove(node,data)"></i>
-        </span>
-      </div>
-    </el-tree>
-    <div style="position:fixed;bottom:5px">
+
+  <div style="height:100%;position:relative;padding-bottom:30px;box-sizing:border-box">
+    <el-scrollbar style="height:98%;margin-bottom:30px;">
+      <el-tree
+        :data="$store.state.hosts.hosts"
+        :props="defaultProps"
+        :load="load"
+        node-key="label"
+        @node-click="handleNodeClick"
+        :expand-on-click-node="true"
+        lazy
+        ref="tree"
+        style="overflow-x:auto"
+      >
+        <div class="custom-tree-node" slot-scope="{ node, data }">
+          <span>{{ node.label }}</span>
+          <span style="float:right">
+            <!-- <i class="el-icon-edit" @click="() => edit(node,data)" v-if="node.level===1"></i> -->
+            <i class="el-icon-refresh" @click="() => refresh(node,data)"></i>
+            <!-- <i class="el-icon-plus" @click="() => append(node,data)" v-if="node.level===1"></i> -->
+            <i class="el-icon-delete" @click="() => remove(node,data)"></i>
+          </span>
+        </div>
+      </el-tree>
+    </el-scrollbar>
+
+    <div style="position:absolute;bottom:5px">
       <el-button
         size="small"
         style="bottom:5px;"

@@ -11,6 +11,7 @@ import path from 'path';
  */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__pkg = require('../../package.json')
   require('../renderer/store/index.js');
   // import '../renderer/store'
 }
