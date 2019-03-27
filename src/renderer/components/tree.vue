@@ -183,7 +183,9 @@ export default {
           .on("ready", () => {
             resolve(client);
           })
-          .on("end", () => {
+          .on("end", (value) => {
+            console.log('redis end')
+            console.log(value);
             this.$alert(`${data.label}连接已断开`);
           });
         data.client = client;
@@ -228,8 +230,9 @@ export default {
           type: "warning"
         }).then(() => {
           if (data.client) {
-            //关闭连接
-            data.client.quit();
+            //关闭连接 使用end不会触发end事件
+            data.client.end(true);
+            // data.client.quit();
           }
           this.$store
             .dispatch("removeHost", data.label)
