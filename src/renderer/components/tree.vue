@@ -157,12 +157,12 @@ export default {
         let options = {
           port: data.port,
           host: data.host,
-          retry_strategy: (value) => {
-           if(value.code==='ECONNREFUSED'){//此时不重试
-
-           }
-           //FIXME: 无法触发error事件
-           return new Error(`${value.address}无法连接`);
+          retry_strategy: value => {
+            if (value.code === "ECONNREFUSED") {
+              //此时不重试
+            }
+            //FIXME: 无法触发error事件
+            return new Error(`${value.address}无法连接`);
           }
         };
 
@@ -235,6 +235,10 @@ export default {
             .dispatch("removeHost", data.label)
             .then(value => {
               this.$message("删除成功");
+              this.$emit("key-remove", node.parent, {
+                label: data.label,
+                key: data.label
+              });
             })
             .catch(value => {
               console.log(value);
