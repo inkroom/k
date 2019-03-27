@@ -3,7 +3,14 @@
 基于electron的redis客户端，可以在linux、macOs、win下运行
 
 
-#### features
+
+
+![k-redis-gui](https://user-images.githubusercontent.com/27911304/55054165-bf3a5400-5099-11e9-8cb2-53be0cc5e72c.png)
+
+![深度截图_k_20190327141348](https://user-images.githubusercontent.com/27911304/55054380-99617f00-509a-11e9-9ad4-38d920d975e9.png)
+
+
+## features
 
 - [x] redis订阅发布
 - [x] 提供命令行工具
@@ -11,7 +18,7 @@
 - [ ] 实现自定义主题方案功能
 - [x] 背景图片自动切换（点击logo(栉名安娜)即可设置背景图片）
 
-#### Build Setup
+## Build Setup
 
 ``` bash
 # install dependencies
@@ -23,22 +30,18 @@ npm run dev
 # build electron application for production
 npm run build
 
-
-
 ```
 
-#### bug
-
-- 修复树过宽时没有横向滚动条问题(可以考虑拖拽)
-- 生产模式vuex promise失效
-
-#### download
+## download
 
 下载地址：[https://github.com/inkroom/k/releases](https://github.com/inkroom/k/releases)
 
 ps:**因本人基本只使用linux系统，因此只提供AppImage格式，其余格式请clone后自行打包**
 ps: deb格式图标老是不出来，目前尚未解决
 
----
 
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[8fae476](https://github.com/SimulatedGREG/electron-vue/tree/8fae4763e9d225d3691b627e83b9e09b56f6c935) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+## Licence
+
+MIT
+
+
