@@ -23,8 +23,7 @@ const mutations = {
       // return new Promise((resolve, reject) => {
       //   reject(index);
       // });
-    }
-    else {
+    } else {
       let temp = state.hosts.slice();
       temp.splice(index, 1);
       state.hosts = temp;
@@ -37,11 +36,25 @@ const mutations = {
       // });
     }
   },
-  addHost(state , payload) {
+  addHost(state, payload) {
     console.log(payload);
     console.log(`vuex添加=${payload}`)
-    state.hosts.push(Object.assign({}, payload));
-    db.get('hosts').push(payload).write();
+    try {
+      db.get('hosts').push(payload).write();
+      console.log('文件写入结束')
+    } catch (e) {
+      console.log('文件写入有问题')
+      console.log(e);
+    }
+    try {
+      console.log('开始写入vuex')
+      state.hosts.push(Object.assign({}, payload));
+      console.log('vuex写入结束')
+    } catch (e) {
+      console.log('vuex写入有问题')
+      console.log(e);
+    }
+
     // return new Promise((resolve, reject) => {
     //   resolve(1);
     // });
@@ -51,12 +64,15 @@ const mutations = {
 const actions = {
   // payload 连接名称
   removeHost(context, payload) {
+    console.log('action')
     return new Promise((resolve, reject) => {
+      console.log('开始commit')
       context.commit('removeHost', payload);
+      console.log('触发promise');
       resolve();
     });
   },
-  addHost(context , payload) {
+  addHost(context, payload) {
     return new Promise((resolve, reject) => {
       context.commit('addHost', payload);
       resolve();

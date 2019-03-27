@@ -48,7 +48,7 @@
     </div>
 
     <!-- 添加host弹出框 -->
-    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接" width="500px" >
+    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接" width="500px">
       <el-form label-width="100px" status-icon>
         <el-form-item label="连接名：" prop="name">
           <el-input
@@ -144,6 +144,7 @@ export default {
         .createClient(options)
         .on("error", err => {
           this.$message.error(`${data.label}连接出现错误`);
+          client.quit();
         })
         .on("end", () => {
           this.$alert(`${data.label}连接已断开`);
@@ -155,8 +156,17 @@ export default {
       return new Promise((resolve, reject) => {
         let options = {
           port: data.port,
-          host: data.host
+          host: data.host,
+          retry_strategy: (value) => {
+           if(value.code==='ECONNREFUSED'){//此时不重试
+
+           }
+           //FIXME: 无法触发error事件
+           return new Error(`${value.address}无法连接`);
+          }
         };
+
+        console.log(options);
         if (data.index !== 0) {
           options.db = data.index;
         }
@@ -166,7 +176,9 @@ export default {
         let client = this.$redis.redis
           .createClient(options)
           .on("error", err => {
+            console.log("event error");
             this.$message.error(`${data.label}连接出现错误`);
+            reject(err);
           })
           .on("ready", () => {
             resolve(client);
@@ -240,17 +252,27 @@ export default {
           let client = data.client || data.parent.client;
           if (!client) {
             //删除key
-            client = this.createClient(data.parent);
+            client = this.createClient(data.parent)
+              .then(client => {
+                data.client = client;
+                client
+                  .delAsync(data.label)
+                  .then(() => {
+                    this.$emit("key-remove", node.parent, {
+                      label: data.parent.label,
+                      key: data.label
+                    });
+                  })
+                  .catch(err => {
+                    console.log("删除失败");
+                    this.$message.error(`${data.label}删除失败`);
+                  });
+              })
+              .catch(() => {});
           }
-          client.del(data.label);
           // let index  = node.parent.data.children.findIndex((d)=> d.label === data.label );
           // node.parent.data.children.splic(index,1);
           //通知上级已关闭对应的tab
-
-          this.$emit("key-remove", node.parent, {
-            label: data.parent.label,
-            key: data.label
-          });
         });
       }
     },
@@ -283,15 +305,17 @@ export default {
           this.$message(`${this.dialog.add_host.form.label}已存在`);
           return;
         }
-        console.log('添加host')
-        console.log(this.dialog.add_host.form)
-        console.log(JSON.parse(JSON.stringify(this.dialog.add_host.form)))
+        console.log("添加host");
+        console.log(this.dialog.add_host.form);
+        console.log(JSON.parse(JSON.stringify(this.dialog.add_host.form)));
 
-        this.$store
-          .dispatch(
-            "addHost",
-            JSON.parse(JSON.stringify(this.dialog.add_host.form))
-          )
+        let res = this.$store.dispatch(
+          "addHost",
+          JSON.parse(JSON.stringify(this.dialog.add_host.form))
+        );
+        console.log("dispathc返回结果");
+        console.log(res);
+        res
           .then(value => {
             this.dialog.add_host.visible = false;
 
@@ -301,6 +325,10 @@ export default {
 
             console.log("添加成功");
             this.$message("添加成功");
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message.error("添加失败");
           });
       }
     },
@@ -330,10 +358,11 @@ export default {
           //已有client
           this.$emit("leaf-click", key, data.client);
         } else {
+          console.log("parent click");
           this.createClient(node.parent.data)
             .then(client => {
               this.$emit("leaf-click", key, client);
-              this.show = true;
+              data.client = client;
             })
             .catch(err => {
               console.log(err);
@@ -358,7 +387,6 @@ export default {
           this.createClient(data)
             .then(client => {
               this.$emit("leaf-click", key, client);
-              this.show = true;
             })
             .catch(() => {
               console.log("触发连接");
@@ -371,6 +399,8 @@ export default {
       if (node.level === 0) {
         resolve(this.$store.state.hosts.hosts);
       } else if (node.level === 1) {
+        console.log("load 1");
+
         if (node.client) {
           node.client
             .keysAsync("*")
@@ -416,6 +446,7 @@ export default {
               .catch(err => {
                 console.log(err);
                 this.$message.error(`${node.data.label}连接失败`);
+                resolve([]);
               });
           });
         }

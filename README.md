@@ -30,6 +30,7 @@ npm run build
 #### bug
 
 - 修复树过宽时没有横向滚动条问题(可以考虑拖拽)
+- 生产模式vuex promise失效
 
 #### download
 

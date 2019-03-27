@@ -25,10 +25,10 @@ if (process.env.NODE_ENV === 'development') {
     modules,
     plugins: [
       createPersistedState(),
-      createSharedMutations()
+      // createSharedMutations()
     ],
     strict: process.env.NODE_ENV !== 'production'
   }
 }
-
+console.log(res);
 export default new Vuex.Store(res);

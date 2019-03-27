@@ -63,7 +63,7 @@
         @keyup.enter.native="command"
       ></el-input>
       <el-scrollbar style="height:300px;">
-        <div v-html="terminal.result" style="margin-bottom:30px;"></div>
+        <div v-html="terminal.result" style="margin-bottom:30px;user-select:auto;"></div>
       </el-scrollbar>
 
       <!-- <el-input

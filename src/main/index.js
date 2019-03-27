@@ -4,7 +4,6 @@ import path from 'path';
 
 
 
-
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -12,7 +11,7 @@ import path from 'path';
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
   global.__pkg = require('../../package.json')
-  require('../renderer/store/index.js');
+  // require('../renderer/store/index.js');
   // import '../renderer/store'
 }
 
@@ -35,9 +34,11 @@ function createWindow () {
     backgroundColor:'#222933',
     frame:process.env.NODE_ENV === 'development',
     webPreferences:{
-      webSecurity:false
+      webSecurity:false,
+      devTools:true,
     }
   })
+
 
   mainWindow.loadURL(winURL)
 
