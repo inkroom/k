@@ -199,7 +199,7 @@ export default {
         if (!client) {
           this.createClient(data).then(client => {
             client
-              .keys("*")
+              .keysAsync("*")
               .then(value => {
                 console.log(value);
               })
@@ -209,7 +209,7 @@ export default {
           });
         } else {
           client
-            .keys("*")
+            .keysAsync("*")
             .then(value => {
               console.log(value);
             })

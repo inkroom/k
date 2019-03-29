@@ -23,11 +23,14 @@
       </el-col>
       <el-col :md="13" :sm="11" :xs="6">
         <!-- <span>{{value.key}}</span> -->
-
-        <el-input v-model="redis" size="mini" disabled></el-input>
+        <div class="el-input el-input--mini" style="user-select:auto;">
+          <span class="el-input__inner" style="user-select:auto;">{{redis}}</span>
+        </div>
+        <!-- <el-input v-model="redis" size="mini" disabled></el-input> -->
       </el-col>
       <el-col :md="9" :sm="11" :xs="16">
         <span>TTL: {{ ttl }}</span>
+
         <el-button size="mini" @click.native="rename">重命名</el-button>
         <el-button size="mini" @click.native="del">删除</el-button>
         <!-- <el-button size="mini" @click.native="set">修改</el-button> -->
@@ -63,7 +66,7 @@
         @keyup.enter.native="command"
       ></el-input>
       <el-scrollbar style="height:300px;">
-        <div v-html="terminal.result" style="margin-bottom:30px;user-select:auto;"></div>
+        <div v-html="this.terminal.result" style="margin-bottom:30px;user-select:auto;"></div>
       </el-scrollbar>
 
       <!-- <el-input
@@ -118,7 +121,29 @@ export default {
 
     this.load(this.key);
   },
+  computed:{
+    commandResult(){
+      return this.htmlEscape(this.terminal.result);
+    }
+  },
+  filters: {
+   
+  },
   methods: {
+     htmlEscape(text) {
+      return text.replace(/[<>"&]/g, function(match, pos, originalText) {
+        switch (match) {
+          case "<":
+            return "&lt;";
+          case ">":
+            return "&gt;";
+          case "&":
+            return "&amp;";
+          case '"':
+            return "&quot;";
+        }
+      });
+    },
     command(command) {
       if (command && typeof command === "string" && command.trim() !== "") {
         this.terminal.command = command;
@@ -145,18 +170,22 @@ export default {
             let temp = "";
             value.forEach(value => {
               // console.log(`value = ${value}`)
-              temp += value.replace("\n", "<br/>");
+              temp += this.htmlEscape(value).replace("\n", "<br/>");
               temp += "<br/>";
             });
+            console.log(temp);
             this.terminal.result = temp;
           } else if (isNumber(value)) {
-            this.terminal.result = value;
+            this.terminal.result = this.htmlEscape(value);
+            console.log(value);
           } else {
-            this.terminal.result = value.replace(
+            console.log(value);
+            this.terminal.result = this.htmlEscape(value).replace(
               new RegExp("\\n", "g"),
               "<br/>"
             );
           }
+          console.log(this.terminal.result);
           //防止对目前的key进行操作，再重载一次
           this.load(this.redis);
         });
