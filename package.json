@@ -1,6 +1,6 @@
 {
   "name": "k",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": "inkroom <m18942819324@163.com>",
   "description": "基于electron的redis客户端",
   "license": "MIT",
@@ -50,7 +50,9 @@
       "icon": "static/img/256x256.png"
     },
     "linux": {
-      "target":["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "build/icons/"
     }
   },

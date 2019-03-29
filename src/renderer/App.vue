@@ -6,12 +6,7 @@
     <!-- <img id="bg" :src="bg.path"> -->
     <el-container style="height:100%">
       <el-header height="35px;">
-        <img
-          src="static/img/logo.png"
-          style="height:35px;vertical-align:middle;margin-left:-15px;cursor:pointer"
-          alt="k-redis"
-          @click="dialog.bg.visible=true"
-        >
+        <img src="static/img/logo.png" style alt="k-redis" @click="dialog.bg.visible=true">
         <span class="title">{{ title }}</span>
         <span class="controller">
           <i class="el-icon-minus" @click="$electron.remote.getCurrentWindow().minimize()"></i>
@@ -123,7 +118,7 @@ export default {
       } else if (isNaN(parseInt(this.dialog.bg.form.interval))) {
         this.$message.error("切换时间间隔不能为空");
       } else {
-        this.$message("添加成功");
+        this.$message("设置成功");
         this.dialog.bg.visible = false;
         //写入数据库
         this.$db.set("bg", this.dialog.bg.form).write();
@@ -225,7 +220,7 @@ export default {
 };
 </script>
 
-<style scaffold>
+<style scaffold >
 /* CSS */
 
 #bg {
@@ -249,6 +244,13 @@ export default {
   background-color: rgb(60, 60, 60);
   -webkit-app-region: drag;
   z-index: 2002; /*避免被遮罩盖住*/
+}
+.el-header > img {
+  -webkit-app-region: no-drag;
+  height: 35px;
+  vertical-align: middle;
+  margin-left: -15px;
+  cursor: pointer;
 }
 .controller {
   float: right;
