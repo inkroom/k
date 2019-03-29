@@ -183,8 +183,8 @@ export default {
           .on("ready", () => {
             resolve(client);
           })
-          .on("end", (value) => {
-            console.log('redis end')
+          .on("end", value => {
+            console.log("redis end");
             console.log(value);
             this.$alert(`${data.label}连接已断开`);
           });
@@ -254,29 +254,32 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          //删除key
-          this.$refs.tree.remove(node);
           let client = data.client || data.parent.client;
           if (!client) {
             //删除key
-            client = this.createClient(data.parent)
-              .then(client => {
-                data.client = client;
-                client
-                  .delAsync(data.label)
-                  .then(() => {
-                    this.$emit("key-remove", node.parent, {
-                      label: data.parent.label,
-                      key: data.label
-                    });
-                  })
-                  .catch(err => {
-                    console.log("删除失败");
-                    this.$message.error(`${data.label}删除失败`);
-                  });
-              })
-              .catch(() => {});
+            client = this.createClient(data.parent);
           }
+          let temp = client;
+          if (client.then) {
+            temp = client;
+          } else {
+            temp = client.delAsync(data.label);
+          }
+          temp
+            .then(() => {
+              //删除key
+              this.$message("删除成功");
+              this.$refs.tree.remove(node);
+              this.$emit("key-remove", node.parent, {
+                label: data.parent.label,
+                key: data.label
+              });
+            })
+            .catch(err => {
+              console.log("删除失败");
+              this.$message.error(`${data.label}删除失败`);
+            });
+
           // let index  = node.parent.data.children.findIndex((d)=> d.label === data.label );
           // node.parent.data.children.splic(index,1);
           //通知上级已关闭对应的tab
