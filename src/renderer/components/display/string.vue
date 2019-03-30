@@ -1,13 +1,49 @@
+<style lang="scss">
+.k-redis-string-value-container {
+  max-height: 300px;
+  padding-bottom: 15px;
+  border: none !important;
+  &:focus,
+  &:active {
+    border: none !important;
+  }
+
+  .k-redis-string-value {
+    height: 100%;
+    border: none !important;
+    padding-bottom: 15px;
+    padding:-1px;
+    &:focus,
+    &:active {
+      border: none !important;
+    }
+  }
+  *[contenteditable]{
+    border:none !important;
+
+    &:focus,
+    &:active {
+      border: none !important;
+    }
+  }
+}
+</style>
+
 <template>
-  <el-row style="margin-top:15px;">
-    <el-input type="textarea" v-model="value"></el-input>
+  <el-row style="margin-top:15px;padding-right:0;" class="el-textarea__inner">
+    <el-scrollbar style class="el-textarea">
+      <div class="k-redis-string-value-container" style>
+        <div class="k-redis-string-value" style="border:none" contenteditable="true" >{{ value }}</div>
+      </div>
+      <!-- <el-input type="textarea" rows="10" style="max-height:150px;" v-model="value"></el-input> -->
+    </el-scrollbar>
   </el-row>
 </template>
 <script>
 export default {
   data() {
     return {
-      value: ''
+      value: ""
     };
   },
   props: {

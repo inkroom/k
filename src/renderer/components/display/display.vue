@@ -10,7 +10,7 @@
   background-color: black !important;
 } */
 .el-scrollbar__wrap {
-  overflow-x: hidden !important;
+  /* overflow-x: hidden !important; */
 }
 </style>
 
@@ -66,7 +66,7 @@
         @keyup.enter.native="command"
       ></el-input>
       <el-scrollbar style="height:300px;">
-        <div v-html="this.terminal.result" style="margin-bottom:30px;user-select:auto;"></div>
+        <div v-html="this.terminal.result" style="margin-bottom:30px;user-select:auto;color:#eee"></div>
       </el-scrollbar>
 
       <!-- <el-input
@@ -176,7 +176,7 @@ export default {
             console.log(temp);
             this.terminal.result = temp;
           } else if (isNumber(value)) {
-            this.terminal.result = this.htmlEscape(value);
+            this.terminal.result = (value);
             console.log(value);
           } else {
             console.log(value);

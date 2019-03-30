@@ -32,6 +32,13 @@ npm run build
 
 ```
 
+## bug
+- \x00等特殊字符无法正常显示
+- 命令结果过宽，没有横向滚动条
+- ~~生产模式添加host依然会一次添加两个~~
+- host reflash无用
+- 优化string类型内容展示div，文本出现红色边框
+
 ## download
 
 下载地址：[https://github.com/inkroom/k/releases](https://github.com/inkroom/k/releases)

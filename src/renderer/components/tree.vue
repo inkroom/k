@@ -129,29 +129,6 @@ export default {
     };
   },
   methods: {
-    createClientSync(data) {
-      let options = {
-        port: data.port,
-        host: data.host
-      };
-      if (data.index !== 0) {
-        options.db = data.index;
-      }
-      if (data.password !== "") {
-        options.password = data.password;
-      }
-      let client = this.$redis.redis
-        .createClient(options)
-        .on("error", err => {
-          this.$message.error(`${data.label}连接出现错误`);
-          client.quit();
-        })
-        .on("end", () => {
-          this.$alert(`${data.label}连接已断开`);
-        });
-      data.client = client;
-      return client;
-    },
     createClient(data) {
       return new Promise((resolve, reject) => {
         let options = {
@@ -183,10 +160,10 @@ export default {
           .on("ready", () => {
             resolve(client);
           })
-          .on("end", value => {
+          .on("end", () => {
             console.log("redis end");
-            console.log(value);
             this.$alert(`${data.label}连接已断开`);
+            reject();
           });
         data.client = client;
       });
@@ -230,6 +207,7 @@ export default {
           type: "warning"
         }).then(() => {
           if (data.client) {
+            console.log('client end');
             //关闭连接 使用end不会触发end事件
             data.client.end(true);
             // data.client.quit();
@@ -247,7 +225,7 @@ export default {
               console.log(value);
               this.$message.error("删除失败");
             });
-        });
+        }).catch(()=>{});
       } else if (node.level === 2) {
         this.$confirm("确认删除数据-" + data.label + "?", "删除", {
           confirmButtonText: "确定",
@@ -321,10 +299,9 @@ export default {
 
         let res = this.$store.dispatch(
           "addHost",
-          JSON.parse(JSON.stringify(this.dialog.add_host.form))
+          Object.assign({},this.dialog.add_host.form)
+          // JSON.parse(JSON.stringify(this.dialog.add_host.form))
         );
-        console.log("dispathc返回结果");
-        console.log(res);
         res
           .then(value => {
             this.dialog.add_host.visible = false;
@@ -332,6 +309,7 @@ export default {
             this.dialog.add_host.form.label = "";
             this.dialog.add_host.form.host = "";
             this.dialog.add_host.form.password = "";
+            this.dialog.add_host.form.port='';
 
             console.log("添加成功");
             this.$message("添加成功");
@@ -458,6 +436,8 @@ export default {
                 this.$message.error(`${node.data.label}连接失败`);
                 resolve([]);
               });
+          }).catch(()=>{
+            resolve([]);
           });
         }
       }
