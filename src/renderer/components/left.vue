@@ -15,14 +15,13 @@
   <div style="height:100%;position:relative;padding-bottom:30px;box-sizing:border-box">
     <el-scrollbar style="height:98%;margin-bottom:30px;">
       <el-tree
-        :data="$store.state.hosts.hosts"
         :props="defaultProps"
         :load="load"
         node-key="label"
         @node-click="handleNodeClick"
         :expand-on-click-node="false"
-        :lazy="true"
         ref="tree"
+        lazy
         style="overflow-x:auto"
       >
         <div class="custom-tree-node" slot-scope="{ node, data }">
@@ -35,6 +34,28 @@
           </span>
         </div>
       </el-tree>
+      <!-- <tree :data="hosts">
+
+      </tree>-->
+      <!-- <el-collapse>
+        <el-collapse-item v-for="(item,index) in $store.state.hosts.hosts" :key="index">
+          <template slot="title">
+            {{ item.label }}
+            <i class="el-icon-refresh"></i>
+            <i class="el-icon-delete"></i>
+          </template>
+          <el-collapse>
+            <el-collapse-item v-for="(key,index) in item.children" :key="index">
+              <template slot="title">
+                {{ item.label }}
+                <i class="el-icon-refresh"></i>
+                <i class="el-icon-delete"></i>
+              </template>
+              <div>{{key.label }}</div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-collapse-item>
+      </el-collapse>-->
     </el-scrollbar>
 
     <div style="position:absolute;bottom:5px">
@@ -100,8 +121,10 @@
 
 <script>
 import { isIPv4 } from "net";
+import Tree from "./tree";
 
 export default {
+  components: { Tree },
   data() {
     //因为vuex分文件存储，多出一层是文件名
     console.log(this.$store.state.hosts.hosts);
@@ -117,7 +140,8 @@ export default {
             port: "",
             password: "",
             index: 0,
-            leaf: false
+            leaf: false,
+            children: []
           }
         }
       },
@@ -125,7 +149,8 @@ export default {
         children: "children",
         label: "label",
         isLeaf: "leaf"
-      }
+      },
+      hosts: Object.assign([], this.$store.state.hosts.hosts)
     };
   },
   methods: {
@@ -165,7 +190,8 @@ export default {
             this.$alert(`${data.label}连接已断开`);
             reject();
           });
-        data.client = client;
+        //FIXME: tree绑定vuex，则不允许直接修改数据
+        //        data.client = client;
       });
     },
     append(node, data) {},
@@ -174,48 +200,22 @@ export default {
         //host
         let client = data.client;
         if (!client) {
-          this.createClient(data).then(client => {
-            client
-              .keysAsync("*")
-              .then(value => {
-                console.log("host refresh");
-                // var theChildren = node.childNodes
-                // theChildren.splice(0, theChildren.length)
-
-                // node.doCreateChildren(children)
-
-                console.log(value);
-              })
-              .catch(err => {
-                this.$message.error(`${data.label}刷新失败`);
-              });
+          client = this.createClient(data).then(client => {
+            return new Promise((resolve, reject) => {
+              resolve(client);
+            });
           });
-        } else {
+        }
+        client.then(client => {
           client
             .keysAsync("*")
             .then(value => {
-              let keys = [];
-              value.forEach(e => {
-                keys.push({
-                  label: e,
-                  host: data.host,
-                  port: data.port,
-                  left:true,
-                     isLeaf:true,
-                  client: client
-                });
-              });
-              var theChildren = node.childNodes;
-              theChildren.splice(0, theChildren.length);
-              //FIXME  新刷新出来的key带有下拉按钮，不被认为是叶子节点
-              node.doCreateChildren(keys);
-              console.log("host refresh");
               console.log(value);
             })
             .catch(err => {
               this.$message.error(`${data.label}刷新失败`);
             });
-        }
+        });
       } else if (node.level === 1) {
         //key
       }
@@ -310,7 +310,7 @@ export default {
         this.$message("端口1-25535");
       } else {
         //判断重名
-        let index = this.$store.state.hosts.hosts.findIndex(
+        let index = this.hosts.findIndex(
           d => d.label === this.dialog.add_host.form.label
         );
         if (index !== -1) {
@@ -336,6 +336,26 @@ export default {
             this.dialog.add_host.form.port = "";
 
             console.log("添加成功");
+            console.log(this.hosts);
+            console.log(`length = ${this.hosts.length}`)
+               console.log( Object.assign({}, this.dialog.add_host.form))
+            if (this.hosts.length > 0) {
+              console.log(this.hosts);
+              console.log('node');
+              console.log(this.$refs.tree.getNode(this.hosts[this.hosts.length-1]))
+              this.$refs.tree.insertAfter(
+                Object.assign({}, this.dialog.add_host.form),
+                this.$refs.tree.getNode(this.hosts[this.hosts.length-1])
+              );
+            } else {
+              console.log('自己')
+           
+              this.$refs.tree.insertAfter(
+                Object.assign({}, this.dialog.add_host.form),
+                this.$refs.tree
+              );
+            }
+            this.hosts.push(Object.assign({}, this.dialog.add_host.form));
             this.$message("添加成功");
           })
           .catch(err => {
@@ -384,21 +404,33 @@ export default {
 
         // this.$emit("leaf-click", key);
       } else {
+        //host节点,顶级节点
         //非叶子节点
         //构造一个redis = client
 
+        // let client = data.client;
+        // if (!client) {
+        //   client = this.createClient(data).then(client => {
+        //     return new Promise((resolve, reject) => {
+        //       resolve(client);
+        //     });
+        //   });
+        // }
+        let key = {
+          label: data.label,
+          host: data.host,
+          port: data.port
+        };
         if (data.client) {
-          let key = {
-            label: data.label,
-            host: data.host,
-            port: data.port,
-            leaf:true
-          };
+          console.log("已有client，并传递");
+          console.log(data.client);
           //已有client
           this.$emit("leaf-click", key, data.client);
         } else {
           this.createClient(data)
             .then(client => {
+              console.log("传递client");
+              console.log(client);
               this.$emit("leaf-click", key, client);
             })
             .catch(() => {
@@ -407,68 +439,55 @@ export default {
             });
         }
       }
-      return false;
     },
     load(node, resolve) {
       if (node.level === 0) {
-        resolve(this.$store.state.hosts.hosts);
+        resolve(this.hosts);
+        // resolve(this.$store.state.hosts.hosts);
       } else if (node.level === 1) {
         console.log("load 1");
-
-        if (node.client) {
-          node.client
-            .keysAsync("*")
-            .then(reply => {
-              if (reply.length == 0) {
-                resolve([]);
-              } else {
-                let result = [];
-                reply.forEach(element => {
-                  result.push({
-                    label: element,
-                    leaf: true,
-                 
-                    parent: node.parent.data[0] //不知道为什么是一个数组
-                  });
-                });
-                resolve(result);
-              }
+        let client = node.client;
+        if (!client) {
+          client = this.createClient(node.data)
+            .then(client => {
+              return new Promise((resolve, reject) => {
+                resolve(client);
+              });
             })
             .catch(err => {
-              resolve([]);
-              console.log(err);
-              this.$message.error(`${node.data.label}连接失败`);
-            });
-        } else {
-          this.createClient(node.data)
-            .then(client => {
-              client
-                .keysAsync("*")
-                .then(reply => {
-                  if (reply.length == 0) {
-                    resolve([]);
-                  } else {
-                    let result = [];
-                    reply.forEach(element => {
-                      result.push({
-                        label: element,
-                        leaf: true,
-                        parent: node.parent.data[0] //不知道为什么是一个数组
-                      });
-                    });
-                    resolve(result);
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                  this.$message.error(`${node.data.label}连接失败`);
-                  resolve([]);
-                });
-            })
-            .catch(() => {
-              resolve([]);
+              return new Promise((resolve, reject) => {
+                reject(err);
+              });
             });
         }
+        client
+          .then(client => {
+            client
+              .keysAsync("*")
+              .then(reply => {
+                if (reply.length == 0) {
+                  resolve([]);
+                } else {
+                  let result = [];
+                  reply.forEach(element => {
+                    result.push({
+                      label: element,
+                      leaf: true,
+                      parent: node.parent.data[0] //不知道为什么是一个数组
+                    });
+                  });
+                  resolve(result);
+                }
+              })
+              .catch(err => {
+                resolve([]);
+                console.log(err);
+                this.$message.error(`${node.data.label}连接失败`);
+              });
+          })
+          .catch(err => {
+            resolve([]);
+          });
       }
     }
   }
