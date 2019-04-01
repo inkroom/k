@@ -1,5 +1,7 @@
 # k
 
+[![platform](https://woolson.gitee.io/npmer-badge/platform-555555-linux-44cc11-download-ffffff-square-gradient-shadow.svg)](https://github.com/inkroom/k/releases)
+
 基于electron的redis客户端，可以在linux、macOs、win下运行
 
 
