@@ -38,6 +38,8 @@ npm run build
 - ~~生产模式添加host依然会一次添加两个~~
 - host reflash无用
 - 优化string类型内容展示div，文本出现红色边框
+- host点击刷新后，所有key都出现下拉icon
+- 部分情况下，删除host，会出现无限递归
 
 ## download
 
