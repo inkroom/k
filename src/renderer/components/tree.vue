@@ -191,6 +191,8 @@ export default {
             //     this.$message.error(`${data.label}刷新失败`);
             //   });
           });
+        } else {
+          client = Promise.resolve(client);
         }
 
         client.then(client => {
@@ -417,9 +419,16 @@ export default {
         resolve(this.$store.state.hosts.hosts);
       } else if (node.level === 1) {
         console.log("load 1");
-
-        if (node.client) {
-          node.client
+        let client = node.client;
+        if (!client) {
+          client = this.createClient(node.data).then(client => {
+            return Promise.resolve(client);
+          });
+        } else {
+          client = Promise.resolve(client);
+        }
+        client.then(client => {
+          client
             .keysAsync("*")
             .then(reply => {
               if (reply.length == 0) {
@@ -442,36 +451,7 @@ export default {
               console.log(err);
               this.$message.error(`${node.data.label}连接失败`);
             });
-        } else {
-          this.createClient(node.data)
-            .then(client => {
-              client
-                .keysAsync("*")
-                .then(reply => {
-                  if (reply.length == 0) {
-                    resolve([]);
-                  } else {
-                    let result = [];
-                    reply.forEach(element => {
-                      result.push({
-                        label: element,
-                        leaf: true,
-                        parent: node.parent.data[0] //不知道为什么是一个数组
-                      });
-                    });
-                    resolve(result);
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                  this.$message.error(`${node.data.label}连接失败`);
-                  resolve([]);
-                });
-            })
-            .catch(() => {
-              resolve([]);
-            });
-        }
+        });
       }
     }
   }
