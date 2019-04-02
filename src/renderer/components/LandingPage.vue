@@ -96,7 +96,6 @@ import Tree from "./tree";
 import Display from "./display/display";
 import Subscribe from "./display/subscribe";
 
-
 export default {
   name: "landing-page",
   data() {
@@ -108,7 +107,6 @@ export default {
         ]
       },
       dialog: {
-       
         subscribe: {
           visible: false,
           form: {
@@ -159,9 +157,14 @@ export default {
       this.tabRemove(tab);
     },
     tabRemove(targetName) {
-      let index = this.tabs.keys.findIndex(
-        d => this.getTabKey(d) === targetName
-      );
+      console.log("tab remove");
+      let index = this.tabs.keys.findIndex(d => {
+        console.log(d);
+        return this.getTabKey(d) === targetName;
+      });
+      if(index===-1){//没有标签
+        return;
+      }
       //换另一个选中
       if (index !== this.tabs.keys.length - 1) {
         //选中下一个
@@ -174,16 +177,20 @@ export default {
       this.tabs.keys.splice(index, 1);
     },
     getTabKey(item) {
+      console.log("get tab key");
+      console.log(item);
       if (item.channel) return "订阅：" + item.label + "-" + item.channel;
       if (item.key) return item.label + "-" + item.key;
       return item.label;
     },
     setTab(item) {
+      console.log("set tag");
+      console.log(item);
       if (item.channel) {
         this.tabs.now = "订阅：" + item.label + "-" + item.channel;
       }
     },
-   
+
     leafClick(data, client) {
       // 判断当前是否有数据
       let index = this.tabs.keys.findIndex(d => {

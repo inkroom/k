@@ -174,23 +174,26 @@ export default {
         //host
         let client = data.client;
         if (!client) {
-          this.createClient(data).then(client => {
-            client
-              .keysAsync("*")
-              .then(value => {
-                console.log("host refresh");
-                // var theChildren = node.childNodes
-                // theChildren.splice(0, theChildren.length)
+          client = this.createClient(data).then(client => {
+            return Promise.resolve(client);
+            // client
+            //   .keysAsync("*")
+            //   .then(value => {
+            //     console.log("host refresh");
+            //     // var theChildren = node.childNodes
+            //     // theChildren.splice(0, theChildren.length)
 
-                // node.doCreateChildren(children)
+            //     // node.doCreateChildren(children)
 
-                console.log(value);
-              })
-              .catch(err => {
-                this.$message.error(`${data.label}刷新失败`);
-              });
+            //     console.log(value);
+            //   })
+            //   .catch(err => {
+            //     this.$message.error(`${data.label}刷新失败`);
+            //   });
           });
-        } else {
+        }
+
+        client.then(client => {
           client
             .keysAsync("*")
             .then(value => {
@@ -200,8 +203,8 @@ export default {
                   label: e,
                   host: data.host,
                   port: data.port,
-                  left:true,
-                     isLeaf:true,
+                  left: true,
+                  isLeaf: true,
                   client: client
                 });
               });
@@ -215,7 +218,7 @@ export default {
             .catch(err => {
               this.$message.error(`${data.label}刷新失败`);
             });
-        }
+        });
       } else if (node.level === 1) {
         //key
       }
@@ -392,7 +395,7 @@ export default {
             label: data.label,
             host: data.host,
             port: data.port,
-            leaf:true
+            leaf: true
           };
           //已有client
           this.$emit("leaf-click", key, data.client);
@@ -427,7 +430,7 @@ export default {
                   result.push({
                     label: element,
                     leaf: true,
-                 
+
                     parent: node.parent.data[0] //不知道为什么是一个数组
                   });
                 });
