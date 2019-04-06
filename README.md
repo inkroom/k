@@ -48,7 +48,9 @@ npm run build
 
 下载地址：[https://github.com/inkroom/k/releases](https://github.com/inkroom/k/releases)
 
-ps:**因本人基本只使用linux系统，因此只提供AppImage格式，其余格式请clone后自行打包**
+ps:**因本人基本只使用linux系统，因此只提供AppImage格式，其余格式请clone后自行打包** 
+
+
 ps: deb格式图标老是不出来，目前尚未解决
 
 
