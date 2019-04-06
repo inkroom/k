@@ -1,11 +1,10 @@
 <template>
   <div id="app">
-    <background ref="bg">
-    </background>
+    <background ref="bg"></background>
     <!-- <img id="bg" :src="bg.path"> -->
     <el-container style="height:100%">
-      <el-header height="35px;">
-        <img src="static/img/logo.png" style alt="k-redis" @click="()=>$refs.bg.showSetBg()">
+      <el-header class="title-bar">
+        <img src="static/img/k.png" style alt="k-redis" @click="()=>$refs.bg.showSetBg()">
         <span class="title">{{ title }}</span>
         <span class="controller">
           <i class="el-icon-minus" @click="$electron.remote.getCurrentWindow().minimize()"></i>
@@ -31,14 +30,13 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-import background from './components/background';
+import background from "./components/background";
 export default {
-  components:{background},
+  components: { background },
   name: "k",
   data() {
     //获取是否有退出相关配置信息
@@ -46,7 +44,6 @@ export default {
     console.log(this.$db.get("setting").value());
     console.log(process.versions);
     return {
-    
       title: this.$electron.remote.getCurrentWindow().getTitle(),
       dialog: {
         close: {
@@ -59,11 +56,8 @@ export default {
     };
   },
   mounted() {
-
   },
   methods: {
-    
-   
     close() {
       //存储配置信息
       this.$db
@@ -75,43 +69,53 @@ export default {
       console.log(this.$db.get("setting").value());
       // console.log(this.$electron);
       this.$electron.remote.app.quit();
-    },
-  
+    }
   }
 };
 </script>
 
-<style scaffold >
+<style lang="scss" >
 /* CSS */
 
+$title-bar-height: 35px;
 
+*{
+  cursor: default;
+}
+.el-notification,.el-message {
+  margin-top: $title-bar-height + 12px;
+}
 
-.el-header {
+.title-bar {
   vertical-align: middle;
-  line-height: 35px;
+  line-height: $title-bar-height;
   background-color: rgb(60, 60, 60);
   -webkit-app-region: drag;
   z-index: 2002; /*避免被遮罩盖住*/
-}
-.el-header > img {
-  -webkit-app-region: no-drag;
-  height: 35px;
-  vertical-align: middle;
-  margin-left: -15px;
-  cursor: pointer;
-}
-.controller {
-  float: right;
-}
-.controller > i {
-  cursor: pointer;
-  width: 40px;
-  text-align: center;
-  line-height: inherit;
 
-  -webkit-app-region: no-drag;
-}
-.controller > i:hover {
-  background-color: rgb(121, 121, 133);
+  height: $title-bar-height !important; //element对于header使用行内样式，所以需要提权
+
+  > img {
+    -webkit-app-region: no-drag;
+    height: $title-bar-height;
+    vertical-align: middle;
+    margin-left: -15px;
+    cursor: pointer;
+  }
+
+  .controller {
+    float: right;
+  }
+  .controller > i {
+    cursor: pointer;
+    width: 40px;
+    text-align: center;
+    line-height: inherit;
+
+    -webkit-app-region: no-drag;
+  }
+  .controller > i:hover {
+    background-color: rgb(121, 121, 133);
+  }
 }
 </style>

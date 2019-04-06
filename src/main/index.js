@@ -30,7 +30,7 @@ function createWindow () {
     minWidth:800,
     minHeight:650,
     useContentSize: true,
-    icon:`${__static}/img/logo.png`,
+    icon:`${__static}/img/k.png`,
     backgroundColor:'#222933',
     frame:process.env.NODE_ENV === 'development',
     webPreferences:{

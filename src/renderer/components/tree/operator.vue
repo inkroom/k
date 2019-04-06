@@ -155,7 +155,11 @@ export default {
           .on("end", () => {
             console.log("redis end");
             data.client = null;
-            this.$alert(`${data.label}连接已断开`);
+            this.$notify({
+              duration: 0,
+              message: `${data.label}连接已断开`,
+              position: "bottom-right"
+            });
             reject();
           });
         data.client = client;

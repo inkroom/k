@@ -187,7 +187,11 @@ export default {
           })
           .on("end", () => {
             console.log("redis end");
-            this.$alert(`${data.label}连接已断开`);
+             this.$notify({
+                  duration: 0,
+          message: `${data.label}连接已断开`,
+          position: 'bottom-right'
+        });
             reject();
           });
         //FIXME: tree绑定vuex，则不允许直接修改数据

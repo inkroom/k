@@ -50,7 +50,7 @@ export default {
       console.log("数据库的数据");
       console.log(bg);
       if (bg.dir === "") {
-        this.bg.path = "static/img/k094.jpg";
+        this.bg.path = "static/img/bg.jpg";
         return this.bg.path;
       } else {
         //启动定时

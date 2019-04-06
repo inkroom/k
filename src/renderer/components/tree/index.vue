@@ -177,6 +177,9 @@ export default {
               console.log(err);
               this.$message.error(`${node.data.label}连接失败`);
             });
+        }).catch(err=>{
+          console.log(err);
+          resolve([]);
         });
       }
     }

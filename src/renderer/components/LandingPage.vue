@@ -97,7 +97,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <alert></alert>
   </el-container>
 </template>
 
@@ -107,12 +106,11 @@ import Display from "./display/display";
 import Subscribe from "./display/subscribe";
 
 
-import Alert from './message/alert';
 export default {
   name: "landing-page",
-  components: { Tree, Display, Subscribe,Alert },
+  components: { Tree, Display, Subscribe },
   data() {
-    // this.$alert('1231');
+
     return {
       leftWidth: "250px",
       tabs: {

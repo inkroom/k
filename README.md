@@ -1,5 +1,7 @@
 # k
 
+![k](https://github.com/inkroom/k/blob/master/static/img/k.png?raw=true)
+
 [![platform](https://woolson.gitee.io/npmer-badge/platform-555555-linux-44cc11-download-ffffff-square-gradient-shadow.svg)](https://github.com/inkroom/k/releases)
 
 ![GitHub Releases](https://img.shields.io/github/downloads/inkroom/k/v0.3.0/total.svg?label=download&style=popout)
