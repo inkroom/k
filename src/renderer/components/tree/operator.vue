@@ -1,9 +1,7 @@
 
 
 <script>
-
 export default {
-  
   methods: {
     remove(node, data) {
       if (node.level === 1) {
@@ -75,7 +73,7 @@ export default {
         });
       }
     },
-   
+
     refresh(node, data) {
       if (node.level === 1) {
         //host
@@ -148,6 +146,7 @@ export default {
           .on("error", err => {
             console.log("event error");
             this.$message.error(`${data.label}连接出现错误`);
+            data.client = null;
             reject(err);
           })
           .on("ready", () => {
@@ -155,6 +154,7 @@ export default {
           })
           .on("end", () => {
             console.log("redis end");
+            data.client = null;
             this.$alert(`${data.label}连接已断开`);
             reject();
           });

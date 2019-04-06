@@ -36,12 +36,13 @@ npm run build
 
 ## bug
 - \x00等特殊字符无法正常显示
-- 命令结果过宽，没有横向滚动条
+- ~~命令结果过宽，没有横向滚动条~~
 - ~~生产模式添加host依然会一次添加两个~~
-- host reflash无用
+- ~~host reflash无用~~
 - 优化string类型内容展示div，文本出现红色边框
-- host点击刷新后，所有key都出现下拉icon
-- 部分情况下，删除host，会出现无限递归
+- ~~host点击刷新后，所有key都出现下拉icon~~
+- ~~部分情况下，删除host，会出现无限递归~~
+- 偶尔删除host会报循环引用不能json的错
 
 ## download
 
