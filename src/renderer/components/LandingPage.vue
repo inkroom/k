@@ -33,14 +33,23 @@
 </style>
 
 <template>
-  <el-container style="height:100%">
-    <el-aside width="250px" class="left">
+  <el-container style="height:100%;">
+    <el-aside
+      :style="{width:this.leftWidth}"
+      class="left"
+      @mouseup.native="mouseUp"
+      @mousemove.native="moving"
+    >
       <tree @leaf-click="leafClick" @key-remove="keyRemove">
         <el-button size="small" style="bottom:5px;" @click="dialog.subscribe.visible = true">订阅</el-button>
       </tree>
     </el-aside>
 
-    <el-main>
+    <el-main @mouseup.native="mouseUp"  @mousemove.native="moving">
+      <div
+      @mousedown="mouseDown"
+        style="height: 100%;position: absolute;left: 0;width: 5px;cursor: col-resize;z-index: 9999;"
+      ></div>
       <el-scrollbar style="height:100%;">
         <el-tabs
           v-model="tabs.now"
@@ -95,11 +104,11 @@
 import Tree from "./tree";
 import Display from "./display/display";
 import Subscribe from "./display/subscribe";
-
 export default {
   name: "landing-page",
   data() {
     return {
+      leftWidth: "250px",
       tabs: {
         now: "",
         keys: [
@@ -162,7 +171,8 @@ export default {
         console.log(d);
         return this.getTabKey(d) === targetName;
       });
-      if(index===-1){//没有标签
+      if (index === -1) {
+        //没有标签
         return;
       }
       //换另一个选中
@@ -215,6 +225,45 @@ export default {
         this.tabs.keys[index].key = data.key;
       }
       this.tabs.now = this.getTabKey(data);
+    },
+    splitMove(value) {
+      console.log("移动的宽度=" + value);
+      //获取宽度
+      let width = this.leftWidth.split("px")[0];
+      console.log(`现在的宽度=${width}`);
+      this.leftWidth = parseInt(width) + parseInt(value) + "px";
+    },
+    mouseUp(e) {
+      this.drag = false;
+      document.removeEventListener("mouseup", this.mouseUp);
+    },
+    mouseDown(e) {
+      this.drag = true;
+      this.mx = e.pageX;
+      this.initX = parseInt(this.leftWidth.split("px")[0]);
+      document.addEventListener("mouseup", this.mouseUp);
+    },
+    moving(e) {
+      if (this.drag) {
+        console.log(
+          `e.pageX = ${e.pageX}, this.mx=${this.mx}，变化的x=${parseInt(
+            e.pageX - this.mx
+          )}`
+        );
+
+        // console.log(`现在的宽度=${width}`);
+
+        let width = parseInt(this.initX) + parseInt(e.pageX - this.mx);
+        if (width > 200) {
+          this.leftWidth =
+            parseInt(this.initX) + parseInt(e.pageX - this.mx) + "px";
+        } else {
+          this.mouseUp();
+        }
+
+        // this.$emit("move", e.pageX - this.mx );
+        //每次都需要重新定位
+      }
     }
   },
   mounted() {}

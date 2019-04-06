@@ -16,7 +16,7 @@
 
 - [x] redis订阅发布
 - [x] 提供命令行工具
-- [x] [黑色主题](https://github.com/Arattian/element-theme-dark)
+- [x] [黑色主题，来自Arattian/element-theme-dark](https://github.com/Arattian/element-theme-dark)
 - [ ] 实现自定义主题方案功能
 - [x] 背景图片自动切换（点击logo(栉名安娜)即可设置背景图片）
 

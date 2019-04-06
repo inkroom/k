@@ -127,7 +127,7 @@ export default {
           });
       }
     },
-     refresh(node, data) {
+    refresh(node, data) {
       if (node.level === 1) {
         //host
         let client = data.client;
@@ -157,12 +157,16 @@ export default {
               var theChildren = node.childNodes;
               theChildren.splice(0, theChildren.length);
               //FIXME  新刷新出来的key带有下拉按钮，不被认为是叶子节点
+
               node.doCreateChildren(keys);
-              console.log("host refresh");
-              console.log(value);
+              //TODO 优化去除叶子节点的逻辑，这个实现方案过于野蛮
+              node.childNodes.forEach(e => {
+                e.isLeaf = true;
+              });
             })
             .catch(err => {
               this.$message.error(`${data.label}刷新失败`);
+              console.log(err);
             });
         });
       } else if (node.level === 1) {
