@@ -1,7 +1,9 @@
-<template></template>
+
 
 <script>
+
 export default {
+  
   methods: {
     remove(node, data) {
       if (node.level === 1) {
@@ -28,6 +30,7 @@ export default {
                 });
               })
               .catch(value => {
+                throw value;
                 console.log(value);
                 this.$message.error("删除失败");
               });
@@ -62,6 +65,7 @@ export default {
             })
             .catch(err => {
               console.log("删除失败");
+              console.log(err);
               this.$message.error(`${data.label}删除失败`);
             });
 
@@ -71,62 +75,7 @@ export default {
         });
       }
     },
-    add() {
-      if (this.dialog.add_host.disabled) {
-        this.dialog.add_host.visible = false;
-        return;
-      }
-      console.log(this.dialog.add_host.form);
-      console.log(this.dialog.add_host.form.name);
-      console.log(this.dialog.add_host.form.name === "");
-      if (this.dialog.add_host.form.label === "") {
-        this.$message("连接名称不能为空");
-      } else if (!isIPv4(this.dialog.add_host.form.host)) {
-        this.$message("仅支持ipv4");
-      } else if (isNaN(parseInt(this.dialog.add_host.form.port))) {
-        this.$message("端口1-25535");
-      } else if (
-        parseInt(this.dialog.add_host.form.port) < 1 ||
-        parseInt(this.dialog.add_host.form.port) > 65535
-      ) {
-        console.log(parseInt(this.dialog.add_host.form.port));
-        this.$message("端口1-25535");
-      } else {
-        //判断重名
-        let index = this.$store.state.hosts.hosts.findIndex(
-          d => d.label === this.dialog.add_host.form.label
-        );
-        if (index !== -1) {
-          this.$message(`${this.dialog.add_host.form.label}已存在`);
-          return;
-        }
-        console.log("添加host");
-        console.log(this.dialog.add_host.form);
-        console.log(JSON.parse(JSON.stringify(this.dialog.add_host.form)));
-
-        let res = this.$store.dispatch(
-          "addHost",
-          Object.assign({}, this.dialog.add_host.form)
-          // JSON.parse(JSON.stringify(this.dialog.add_host.form))
-        );
-        res
-          .then(value => {
-            this.dialog.add_host.visible = false;
-
-            this.dialog.add_host.form.label = "";
-            this.dialog.add_host.form.host = "";
-            this.dialog.add_host.form.password = "";
-            this.dialog.add_host.form.port = "";
-
-            console.log("添加成功");
-            this.$message("添加成功");
-          })
-          .catch(err => {
-            console.log(err);
-            this.$message.error("添加失败");
-          });
-      }
-    },
+   
     refresh(node, data) {
       if (node.level === 1) {
         //host

@@ -46,82 +46,23 @@
       >添加连接</el-button>
       <slot></slot>
     </div>
-   <!-- 添加host弹出框 -->
-    <el-dialog :visible.sync="dialog.add_host.visible" title="添加连接" width="500px">
-      <el-form label-width="100px" status-icon>
-        <el-form-item label="连接名：" prop="name">
-          <el-input
-            placeholder="如：localhost"
-            size="small"
-            :disabled="dialog.add_host.disabled"
-            v-model="dialog.add_host.form.label"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="连接地址：" prop="host">
-          <el-input
-            placeholder="仅支持ipv4"
-            size="small"
-            :disabled="dialog.add_host.disabled"
-            v-model="dialog.add_host.form.host"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="连接端口：" prop="host">
-          <el-input
-            placeholder
-            size="small"
-            :disabled="dialog.add_host.disabled"
-            v-model="dialog.add_host.form.port"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="数据库：" prop="host">
-          <el-input
-            placeholder="数据库序号"
-            size="small"
-            :disabled="dialog.add_host.disabled"
-            v-model="dialog.add_host.form.index"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="认证密码：">
-          <el-input
-            placeholder="可选"
-            size="small"
-            :disabled="dialog.add_host.disabled"
-            v-model="dialog.add_host.form.password"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="add">添加连接</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+    <add-host v-if="dialog.add_host.visible"></add-host>
   </div>
 </template>
 
 <script>
-import { isIPv4 } from "net";
-import operator from './operator';
 
+import operator from './operator';
+import addHost from './addHost';
 export default {
+  components:{addHost},
   mixins:[operator],
   data() {
     //因为vuex分文件存储，多出一层是文件名
     console.log(this.$store.state.hosts.hosts);
     //获取存储的host
     return {
-      dialog: {
-        add_host: {
-          visible: false,
-          disabled: false,
-          form: {
-            label: "",
-            host: "",
-            port: "",
-            password: "",
-            index: 0,
-            leaf: false
-          }
-        }
-      },
+      dialog:{add_host:{visible:false}},
       defaultProps: {
         children: "children",
         label: "label",

@@ -205,7 +205,10 @@ export default {
         })
         .catch(() => {});
     },
-    del() {},
+    del() {
+      this.terminal.command='del '+this.redis;
+      this.command();
+    },
     load(nv) {
       if (nv) {
         this.client.type(nv, (err, v) => {
