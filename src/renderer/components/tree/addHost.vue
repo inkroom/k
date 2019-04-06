@@ -44,6 +44,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="add">添加连接</el-button>
+        <el-button  @click="dialog.add_host.visible=false">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -69,6 +70,13 @@ export default {
         }
       }
     };
+  },
+  watch: {
+    "dialog.add_host.visible"(nv) {
+      if (!nv) {
+        this.$emit("close");
+      }
+    }
   },
   methods: {
     add() {

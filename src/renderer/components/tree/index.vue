@@ -46,7 +46,7 @@
       >添加连接</el-button>
       <slot></slot>
     </div>
-    <add-host v-if="dialog.add_host.visible"></add-host>
+    <add-host v-if="dialog.add_host.visible" @close="()=>this.dialog.add_host.visible=false"></add-host>
   </div>
 </template>
 
