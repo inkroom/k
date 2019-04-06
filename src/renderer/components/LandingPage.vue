@@ -97,6 +97,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <alert></alert>
   </el-container>
 </template>
 
@@ -104,9 +105,14 @@
 import Tree from "./tree";
 import Display from "./display/display";
 import Subscribe from "./display/subscribe";
+
+
+import Alert from './message/alert';
 export default {
   name: "landing-page",
+  components: { Tree, Display, Subscribe,Alert },
   data() {
+    // this.$alert('1231');
     return {
       leftWidth: "250px",
       tabs: {
@@ -126,7 +132,7 @@ export default {
       }
     };
   },
-  components: { Tree, Display, Subscribe },
+
   methods: {
     subscribe() {
       //订阅频道
