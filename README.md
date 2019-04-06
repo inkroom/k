@@ -2,7 +2,7 @@
 
 [![platform](https://woolson.gitee.io/npmer-badge/platform-555555-linux-44cc11-download-ffffff-square-gradient-shadow.svg)](https://github.com/inkroom/k/releases)
 
-![GitHub Releases](https://img.shields.io/github/downloads/inkroom/k/v0.3.0/total.svg?label=download&style=popout)
+![GitHub Releases](https://img.shields.io/github/downloads/inkroom/k/v0.3.1/total.svg?label=download&style=popout)
 
 基于electron的redis客户端，可以在linux、macOs、win下运行
 
