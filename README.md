@@ -1,5 +1,3 @@
-# k
-
 ![k](https://github.com/inkroom/k/blob/master/static/img/k.png?raw=true)
 
 [![platform](https://woolson.gitee.io/npmer-badge/platform-555555-linux-44cc11-download-ffffff-square-gradient-shadow.svg)](https://github.com/inkroom/k/releases)
@@ -10,10 +8,9 @@
 
 
 
+![k-redis-gui](https://user-images.githubusercontent.com/27911304/55671695-3905e500-58c5-11e9-8411-34f2c182d028.png)
 
-![k-redis-gui](https://user-images.githubusercontent.com/27911304/55054165-bf3a5400-5099-11e9-8cb2-53be0cc5e72c.png)
-
-![深度截图_k_20190327141348](https://user-images.githubusercontent.com/27911304/55054380-99617f00-509a-11e9-9ad4-38d920d975e9.png)
+![k-redis-gui](https://user-images.githubusercontent.com/27911304/55671711-6357a280-58c5-11e9-97d6-b1351bdec700.png)
 
 
 ## features
@@ -22,7 +19,7 @@
 - [x] 提供命令行工具
 - [x] [黑色主题，来自Arattian/element-theme-dark](https://github.com/Arattian/element-theme-dark)
 - [ ] 实现自定义主题方案功能
-- [x] 背景图片自动切换（点击logo(栉名安娜)即可设置背景图片）
+- [x] 背景图片自动切换（点击logo即可设置背景图片）
 
 ## Build Setup
 
