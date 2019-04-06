@@ -15,7 +15,8 @@
         </span>
       </el-header>
       <el-main style="height:100%">
-        <router-view></router-view>
+        <entry></entry>
+        <!-- <router-view></router-view> -->
       </el-main>
     </el-container>
 
@@ -34,9 +35,10 @@
 </template>
 
 <script>
-import background from "./components/background";
+import Background from "./components/background";
+import Entry from './components/entry'
 export default {
-  components: { background },
+  components: { Background ,Entry},
   name: "k",
   data() {
     //获取是否有退出相关配置信息
