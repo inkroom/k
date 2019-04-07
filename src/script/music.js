@@ -1,7 +1,4 @@
 
-let MusicDes = {
-
-}
 
 class Music {
     constructor(options) {
@@ -14,7 +11,10 @@ class Music {
         this.origin = options.origin;
         this.originName = options.originName;
 
-        //其余非必须数据
+        //以下为容器维护字段
+        this.status = true;
+        this.id = 0;
+        //其余非必须数据，插件使用
 
         this.custom = Object.assign({}, options);
     }
