@@ -1,20 +1,23 @@
 <template>
   <div id="app">
-    <landing-page></landing-page>
+    <entry></entry>
   </div>
 </template>
 
-<script>
-  import LandingPage from '@/components/LandingPage'
-
-  export default {
-    name: 'music',
-    components: {
-      LandingPage
-    }
+<script >
+import Entry from "./components/entry";
+export default {
+  name: "music",
+  components: {
+    Entry
   }
+}
 </script>
 
 <style>
-  /* CSS */
+/* CSS */
+* {
+  user-select: none;
+  cursor: default;
+}
 </style>
