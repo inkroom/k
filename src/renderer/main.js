@@ -11,6 +11,9 @@ Vue.use(ElementUI);
 
 Vue.helper = Vue.prototype.$helper = helpers;
 
+//实现广播机制
+Vue.prototype.$eventHub= Vue.prototype.$eventHub || new Vue()
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 

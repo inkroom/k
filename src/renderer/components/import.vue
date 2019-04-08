@@ -31,9 +31,18 @@ export default {
   },
   methods: {
     im() {
-      this.$helper.getMusics(this.origin, this.url).then(musics => {
-        this.$store.dispatch("addMusics", musics).then(res => {});
-      });
+      this.$helper
+        .getMusics(this.origin, this.url)
+        .then(musics => {
+          console.log("import的音乐");
+          console.log(musics);
+
+          this.$store.dispatch("addMusics", musics).then(res => {});
+        })
+        .catch(err => {
+          console.log(err);
+          console.log("音乐导入失败");
+        });
     }
   }
 };

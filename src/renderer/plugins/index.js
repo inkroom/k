@@ -34,6 +34,7 @@ let helpers = {
         return names;
     },
 
+
     getMusic(music) {
 
         return Promise.resolve(modules[music.origin].getMusic(music).then(music => { music.id = Math.random(); return music; }))
@@ -44,7 +45,26 @@ let helpers = {
     },
 
     getMusics(origin, url) {
-        return modules[origin].getMusics(url);
+
+
+        let m = modules[origin];
+        console.log(m);
+        console.log(origin);
+        let res = m.getMusics(url).then(musics => {
+
+            console.log('m - musics')
+            console.log(musics);
+
+            musics.forEach(e => {
+                e.status = true; e.origin = origin; e.originName = m.originName
+            })
+            return musics;
+        });
+        console.log('then')
+        console.log(res);
+        return Promise.resolve(res);
+        // return Promise.resolve(m.getMusics(url).then(musics => { musics.forEach(e => { e.status = true; e.origin = origin; e.originName = m.originName }) }))
+        // return modules[origin].getMusics(url);
     }
 
 }

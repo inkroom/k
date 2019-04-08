@@ -1,11 +1,11 @@
 <template >
-  <div class="title">
+  <div id="player">
     <div class="cover left">
-      <img :src="cover" alt>
+      <img :src="music.cover" alt>
     </div>
     <div class="right">
       <div>
-        <span>{{title}}</span>
+        <span>{{music.name}}</span>
       </div>
       <div class="controller">
         <span>
@@ -25,31 +25,52 @@
         <div class="bar">
           <el-slider v-model="process" :show-tooltip="false"></el-slider>
         </div>
-        <span class="time">{{ converTime(now) }}/{{converTime(total)}}</span>
+        <span class="time">{{ converTime(now) }}/{{converTime(music.time)}}</span>
       </div>
     </div>
-    <audio :src="url" @error="playerError" style="display:none;"></audio>
+    <audio
+      v-if="music.url!=''"
+      :src="music.url"
+      @error="playerError"
+      style="display:none;"
+      ref="audio"
+      autoplay
+    ></audio>
   </div>
 </template>
 <script >
 export default {
   data() {
     return {
-      title: "歌曲名",
-      cover:
-        "https://image-1252774288.cos.ap-chengdu.myqcloud.com/album/%E4%BA%8C%E6%AC%A1%E5%85%83/c391e135-d833-47d6-9992-e55c49694d94.jpg",
-      url: "",
       process: 0,
-      total: 3333,
-      now: 123,
-      playing: false
+      now: 0,
+
+      playing: false,
+      music: {
+        name: "歌曲名",
+        cover:
+          "https://image-1252774288.cos.ap-chengdu.myqcloud.com/album/%E4%BA%8C%E6%AC%A1%E5%85%83/c391e135-d833-47d6-9992-e55c49694d94.jpg",
+        url: "",
+        time: 0
+      }
     };
+  },
+  created() {
+    //注册播放音乐改变事件，该事件可能来自于列表项点击，自动切换，搜索列表
+    this.$eventHub.$on("musicChange", music => {
+      this.music = music;
+      console.log("接收到播放请求");
+    });
   },
   methods: {
     prev() {},
     next() {},
     playOrPause() {},
-    playerError() {},
+    playerError() {
+      this.$message.error(`${music.name}无法播放，可能是版权受限`);
+      //广播无法播放事件
+      this.$eventHub.$emit("playerError", music);
+    },
     converTime(time) {
       let value = "";
       value +=
@@ -61,7 +82,7 @@ export default {
       return value;
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -80,9 +101,7 @@ $time-width: 100px;
   }
 }
 
-.title {
-  height: $title-height !important;
-
+#player {
   .cover {
     vertical-align: top;
     height: inherit;
@@ -126,6 +145,17 @@ $time-width: 100px;
       line-height: 38px;
     }
   }
+}
+
+// .el-header {
+//   width: 100%;
+//   height: $title-height;
+//   position: fixed;
+//   opacity: 1;
+// }
+.el-main {
+  // margin-top: $title-height !important;
+  // padding-top:0 !important;
 }
 </style>
 
