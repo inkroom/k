@@ -19,12 +19,8 @@
     }
   }
   *[contenteditable]{
-    border:none !important;
-
-    &:focus,
-    &:active {
-      border: none !important;
-    }
+    outline: 0;
+    cursor: text;
   }
 }
 </style>

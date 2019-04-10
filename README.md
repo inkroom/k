@@ -2,7 +2,7 @@
 
 [![platform](https://woolson.gitee.io/npmer-badge/platform-555555-linux-44cc11-download-ffffff-square-gradient-shadow.svg)](https://github.com/inkroom/k/releases)
 
-![GitHub Releases](https://img.shields.io/github/downloads/inkroom/k/v0.3.0/total.svg?label=download&style=popout)
+![GitHub Releases](https://img.shields.io/github/downloads/inkroom/k/v0.3.2/total.svg?label=download&style=popout)
 
 基于electron的redis客户端，可以在linux、macOs、win下运行
 
@@ -40,7 +40,7 @@ npm run build
 - ~~命令结果过宽，没有横向滚动条~~
 - ~~生产模式添加host依然会一次添加两个~~
 - ~~host reflash无用~~
-- 优化string类型内容展示div，文本出现红色边框
+- ~~优化string类型内容展示div，文本出现红色边框~~
 - ~~host点击刷新后，所有key都出现下拉icon~~
 - ~~部分情况下，删除host，会出现无限递归~~
 - 偶尔删除host会报循环引用不能json的错

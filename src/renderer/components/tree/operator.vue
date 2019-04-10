@@ -2,6 +2,9 @@
 
 <script>
 export default {
+  render(h){
+    return h();
+  },
   methods: {
     remove(node, data) {
       if (node.level === 1) {
@@ -55,6 +58,8 @@ export default {
             .then(() => {
               //删除key
               this.$message("删除成功");
+              console.log(node)
+              console.log(data);
               this.$refs.tree.remove(node);
               this.$emit("key-remove", node.parent, {
                 label: data.parent.label,
