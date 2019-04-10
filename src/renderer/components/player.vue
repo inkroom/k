@@ -12,7 +12,7 @@
           <i class="el-icon-d-arrow-left" @click="prev"></i>
         </span>
         <span>
-          <i class="el-icon-caret-right" @click="playOrPause"></i>
+          <i class="el-icon-caret-right" @click="playOrPause" :title="playing?'播放中':'已暂停'"></i>
         </span>
         <span>
           <i class="el-icon-d-arrow-right" @click="next"></i>
@@ -23,18 +23,21 @@
       </div>
       <div class="process-bar">
         <div class="bar">
-          <el-slider v-model="process" :show-tooltip="false"></el-slider>
+          <el-slider v-model="process" :show-tooltip="false" ref="slider" @change="seek"></el-slider>
         </div>
         <span class="time">{{ converTime(now) }}/{{converTime(music.time)}}</span>
       </div>
     </div>
     <audio
-      v-if="music.url!=''"
       :src="music.url"
       @error="playerError"
       style="display:none;"
       ref="audio"
       autoplay
+      @playing="playing = true"
+      @pause="playing = false"
+      @timeupdate="timeupdate"
+      @ended="playing = false"
     ></audio>
   </div>
 </template>
@@ -46,6 +49,7 @@ export default {
       now: 0,
 
       playing: false,
+      drag: false,
       music: {
         name: "歌曲名",
         cover:
@@ -62,14 +66,70 @@ export default {
       console.log("接收到播放请求");
     });
   },
+  mounted() {
+    //注册拖拽
+    // this.$refs.slider.$refs.button1.$refs.button.addEventListener(
+    //   "mousedown",
+    //   () => {
+    //     this.drag = true;
+    //   }
+    // );
+    // this.$refs.slider.$refs.button1.$refs.button.addEventListener(
+    //   "mouseup",
+    //   () => {
+    //     this.drag = false;
+    //   }
+    // );
+    // document.addEventListener("mouseup", this.clearDrag);
+  },
+  destroyed() {
+    // document.addEventListener("mouseup", this.clearDrag());
+  },
+  computed: {
+    audio() {
+      return this.$refs.audio;
+    }
+  },
   methods: {
     prev() {},
     next() {},
-    playOrPause() {},
+    clearDrag() {
+      this.drag = false;
+      // document.removeEventListener("mouseup", this.clearDrag);
+    },
+    timeupdate() {
+      console.log("timeupdate");
+      var currentTime = this.$refs.audio.currentTime;
+      var duration = this.$refs.audio.duration;
+
+      this.process = (currentTime / duration) * 100;
+      // player.music.now = transTime(currentTime);
+      // player.music.total = transTime(duration);
+      // player.music.rate = 50;
+      // player.music.rate = (currentTime / duration) * 100;
+    },
+    playOrPause() {
+      if (this.playing) {
+        this.$refs.audio.pause();
+      } else {
+        this.$refs.audio.play();
+      }
+    },
     playerError() {
-      this.$message.error(`${music.name}无法播放，可能是版权受限`);
-      //广播无法播放事件
-      this.$eventHub.$emit("playerError", music);
+      if (this.music.url !== "") {
+        this.$message.error(`${this.music.name}无法播放，可能是版权受限`);
+        //广播无法播放事件
+        this.$eventHub.$emit("playerError", this.music);
+      }
+    },
+    seek(process) {
+      if (this.audio.fastSeek) this.audio.fastSeek((this.audio.duration * process) / 100);
+      else {
+        console.log(this.audio.duration);
+        this.audio.currentTime = this.audio.duration * (process / 100);
+        console.log(this.audio.currentTime);
+        this.audio.play(); //暂停的情况下必须调用才能继续播放，播放中调用该方法无影响
+      }
     },
     converTime(time) {
       let value = "";

@@ -72,7 +72,7 @@ export default {
         });
     },
     play(index) {
-      if (this.musics[index].url) {
+      if (this.musics[index].url && this.musics[index].url != '') {
         console.log(this.musics[index].url)
         console.log("有url，直接播放");
         this.$eventHub.$emit("musicChange", this.musics[index]);
