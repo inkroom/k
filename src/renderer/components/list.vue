@@ -2,9 +2,9 @@
   <el-scrollbar style="height:100%;" id="k-m-list-container">
     <p>当前共有 {{ musicsSize }} 首</p>
     <ul class="k-m-list">
-      <li v-for="(m,i) in musics" :key="i">
+      <li v-for="(m,i) in musics" :key="i" class="text-ellipsis">
         <span v-if="!m.status" class="el-badge__content el-badge__content--undefined">error</span>
-        <span @click="play(i)" v-html="m.name +' - '+m.author"></span>
+        
         <span style="float:right">
           <span>{{ m.originName }}</span>
           <span>{{ m.time | humanTime}}</span>
@@ -12,6 +12,7 @@
             <i class="el-icon-delete" @click="remove(m)"></i>
           </span>
         </span>
+        <span  @click="play(i)" v-html="m.name +' - '+m.author" :title="m.name +' - '+m.author"></span>
       </li>
     </ul>
     <import :show.sync="dialog.import.visible"></import>
