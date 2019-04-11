@@ -6,6 +6,13 @@ import ElementUI from 'element-ui';
 import  'element-theme-dark';
 
 import helpers from './plugins';
+import * as filters from './filters';
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
+
 
 Vue.use(ElementUI);
 

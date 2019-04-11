@@ -1,15 +1,25 @@
+
+import db from '../../../db';
+
 const state = {
-  list: [{ name: "测试歌曲名", originName: "酷狗", time: "00:00", status: false, id: 1 }]
+  list: db.get('musics').value()
+  //  [{ name: "测试歌曲名", originName: "酷狗", time: "00:00", status: false, id: 1 }]
 }
 
 const mutations = {
   removeMusic(state, index) {
     state.list.splice(index, 1);
+    db.get('musics').remove({ id: state.list[index].id }).write();
   },
   addMusics(state, musics) {
     musics.forEach(element => {
       state.list.push(element);
+      db.get('musics').push(element).write();
     });
+  },
+  updateMusic(state, data) {
+    state.list[data.index] = data;
+    db.set(`musics[${data.index}]`,data.music).write();
   }
 }
 
@@ -32,6 +42,9 @@ const actions = {
     //加入数据
 
     commit('addMusics', musics);
+  },
+  updateMusic({commit}, data) {
+    commit('updateMusic',data);
   }
 }
 

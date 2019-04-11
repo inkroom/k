@@ -4,7 +4,7 @@
     <ul class="k-m-list">
       <li v-for="(m,i) in musics" :key="i">
         <span v-if="!m.status" class="el-badge__content el-badge__content--undefined">error</span>
-        <span @click="play(i)">{{ m.name }}</span>
+        <span @click="play(i)" v-html="m.name +' - '+m.author"></span>
         <span style="float:right">
           <span>{{ m.originName }}</span>
           <span>{{ m.time | humanTime}}</span>
@@ -18,8 +18,6 @@
   </el-scrollbar>
 </template>
 <script>
-// import {Music } from ''
-
 import origin from "../mixins/origin";
 import Import from "./import";
 
@@ -41,27 +39,41 @@ export default {
     return {
       dialog: {
         import: { visible: false }
+      },
+      mode: {
+        random: true
       }
     };
   },
-  filters: {
-    humanTime(value) {
-      let res = "";
-      value = parseInt(value);
-      res +=
-        parseInt(value / 60) < 10
-          ? "0" + parseInt(value / 60)
-          : parseInt(value / 60);
-      res += ":";
-      res +=
-        parseInt(value % 60) < 10
-          ? "0" + parseInt(value % 60)
-          : parseInt(value % 60);
+  created() {
+    this.$eventHub.$on("next", this.next);
+    this.$eventHub.$on("prev", music => {});
 
-      return res;
-    }
+    let v = { status: true, d: 3 };
+    console.log("开始测试aa");
+    console.log(v);
+    console.log(Object.assign({ status: false, a: 3 }, v, false));
   },
   methods: {
+    next(music) {
+      if (this.mode.random) {
+        if (this.musics.length == 0) {
+          return;
+        }
+        if (this.musics.length === 1) {
+          this.play(0);
+          return;
+        }
+        let next = Math.floor(Math.random() * this.musics.length);
+        if (music !== this.musics[next]) {
+          this.play(next);
+          // this.$eventHub.$emit('musicChange',next);
+        } else {
+          //重复则递归生成，歌曲数量够的话是不会递归过深的
+          this.next(music);
+        }
+      }
+    },
     remove(value) {
       console.log(value);
       this.$store
@@ -72,15 +84,26 @@ export default {
         });
     },
     play(index) {
-      if (this.musics[index].url && this.musics[index].url != '') {
-        console.log(this.musics[index].url)
+      if (this.musics[index].url && this.musics[index].url != "") {
+        console.log(this.musics[index].url);
         console.log("有url，直接播放");
         this.$eventHub.$emit("musicChange", this.musics[index]);
       } else {
         console.log("获取播放url");
-        this.$helper.getMusic(this.musics[index]).then(music => {
-          this.$eventHub.$emit("musicChange", music);
-        });
+        this.$helper
+          .getMusic(Object.assign({}, this.musics[index]))
+          .then(music => {
+            if (music.url && music.url !== "") {
+              this.$store.dispatch("updateMusic", { index, music });
+
+              this.$eventHub.$emit("musicChange", music);
+            } else {
+              let music = Object.assign({ status: false }, this.musics[index]);
+              music.status = false;
+              this.$store.dispatch("updateMusic", music);
+              this.$message(`${music.name} 不能播放`);
+            }
+          });
       }
     }
   }
@@ -90,6 +113,7 @@ export default {
 .k-m-list {
   padding-right: 15px;
   padding-left: 15px;
+  padding-bottom: 15px;
   ul,
   li {
     list-style-type: none;

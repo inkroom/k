@@ -1,0 +1,600 @@
+{
+	"state": {
+		"List": {
+			"list": [
+				{
+					"name": "测试歌曲名",
+					"originName": "酷狗",
+					"time": "00:00",
+					"status": false,
+					"id": 1
+				},
+				{
+					"hash": "09518BDE282109EFB2901D0C8AAB0A3F",
+					"time": 330000,
+					"name": "Star Sky (纯音乐)",
+					"author": "Two Steps From Hell",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "FC6A5FE6D3F276E65AB3D259060D6688",
+					"time": 269000,
+					"name": "ALIEz (中文版)",
+					"author": "小缘",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "2F68F6378FA8551D4B6CC18EDB380439",
+					"time": 305027,
+					"name": "极乐净土",
+					"author": "丁译林",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "C7AE09ABFED7B6DDD82C5A3E7F3EF9EA",
+					"time": 283,
+					"name": "Perfect Time",
+					"author": "mpi、小林未郁",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "F1513C67BAEBB873769A56470DA7B1B5",
+					"total": 300287,
+					"name": "Happy love to you",
+					"author": "堀江由衣",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "EE19EEB2874B6068102FCD4E9E992E46",
+					"total": 286000,
+					"name": "X.U.",
+					"author": "Gemie、SawanoHiroyuki[nZk]",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "3A6316F661122EA466A127D187DE20F1",
+					"total": 281000,
+					"name": "瞳のこたえ ~The future ver.~ TVサイズ",
+					"author": "网络歌手",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "63A0196C8C63E7D677B19370EB699EFA",
+					"total": 229016,
+					"name": "She",
+					"author": "Groove Coverage",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "0E7860A2E96F4C4B8CB81689DC1776F0",
+					"total": 234000,
+					"name": "天行九歌",
+					"author": "霍尊",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "96DFE1273CA45FF348911969CAA1E2B2",
+					"total": 329000,
+					"name": "愛の空",
+					"author": "堀江由衣",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "AC4E5B007BD58EAFE0FA1A6A8577822D",
+					"total": 237000,
+					"name": "夏の約束",
+					"author": "堀江由衣",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "5C0F42EDBC109791B8841AF6A53CCF71",
+					"total": 322000,
+					"name": "桜",
+					"author": "堀江由衣",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "D38B608544CF7B449DC5DBA2B0E50FAF",
+					"total": 211000,
+					"name": "プレパレード",
+					"author": "釘宮理恵、堀江由衣、喜多村英梨",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "D2F71E9EECE2F9E1CEE94EB7577EDF6B",
+					"total": 341000,
+					"name": "心臓を捧げよ!",
+					"author": "Linked Horizon",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "D4D45B2FD37094182F35A6F8099463FC",
+					"total": 301000,
+					"name": "telepath~光の塔~",
+					"author": "三澤紗千香",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "BD409A594B9CC40D11FCB144F5611723",
+					"total": 211000,
+					"name": "-遠い空へ- (ヨスガノソラ メインテーマ)",
+					"author": "三輪学",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "BE064EC54082CE79E850EE42DE8575A5",
+					"total": 249000,
+					"name": "Break Beat Bark!",
+					"author": "神田沙也加",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "30BED3C53FFD40D1D4D9F0E1C1205D28",
+					"total": 298000,
+					"name": "delete",
+					"author": "神田沙也加",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "E74749DAAF0ED3CE057183E9BBF9E09C",
+					"total": 197000,
+					"name": "smile for you",
+					"author": "神田沙也加",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "569C3B876B840A7546CDB6AA20A32357",
+					"total": 259000,
+					"name": "BREEZE",
+					"author": "Saiya",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "7EDC40519B24B47ADB0A89F86C92DB8C",
+					"total": 338573,
+					"name": "My Dearest (Album Mix)",
+					"author": "supercell",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "8459D7BE1ACF6D8A4B385BEC37F0269F",
+					"total": 212350,
+					"name": "The Flame",
+					"author": "Tina Arena、Sydney Children&#039;s Choir、Melbourne Symphony Orchestra (墨尔本交响乐团)",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "FAA5BC92D62A808B4BC4298F511BAED8",
+					"total": 311000,
+					"name": "-フレイム・オブ･レッド-",
+					"author": "堀江由衣",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "FC8DE6BD70CA1B968E3D26ED2DEF1B98",
+					"total": 284029,
+					"name": "つないだ手にキスを",
+					"author": "小林沙苗",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "5DFAFAB0BDB6250CAE1D82B0D1B46019",
+					"total": 250000,
+					"name": "光るなら",
+					"author": "Goose house",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "88B7D6C7E10B1A567331A22176B4A807",
+					"total": 140000,
+					"name": "甲板上的马头琴 (Live)",
+					"author": "王宏伟",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "F62C0F07B81B7C88C3765C4763376CAE",
+					"total": 233885,
+					"name": "说时迟",
+					"author": "王梓轩",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "80F380AC70200AB79F279027111E664A",
+					"total": 265000,
+					"name": "书画中国",
+					"author": "魏新雨",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "B4E88DD5521BA66475756BC79A127FBC",
+					"total": 213682,
+					"name": "情人节的夜晚",
+					"author": "小贱、本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "A6B33C68BB9F4AF92865F85962AF47B0",
+					"total": 233587,
+					"name": "爱在西元前",
+					"author": "许嵩",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "BCC2676E6C0C8CC94D4D6DD13596B99F",
+					"total": 372000,
+					"name": "夜空中最亮的星 (Live)",
+					"author": "张杰",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "2CB09538E23202F569F80DE044BAA50A",
+					"total": 215641,
+					"name": "着魔",
+					"author": "张杰",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "841F61C0EC9636B0A95DD8628DE7F485",
+					"total": 297000,
+					"name": "Resuscitated Hope",
+					"author": "コミネリサ",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "86D00B941B3FDE77EBE46FB102355737",
+					"total": 251000,
+					"name": "Resuscitated Hope (短版)",
+					"author": "コミネリサ",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "687BCFD2422F3E9AB06B63166EBF6CCE",
+					"total": 287000,
+					"name": "Unity",
+					"author": "コミネリサ",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "DCE8ED4CE8901DFDA37E9994B07F5422",
+					"total": 243000,
+					"name": "Don&#039;t You Remember",
+					"author": "Adele",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "A9F68A56622DBE9AD2DEB7F478CBD783",
+					"total": 212219,
+					"name": "Make You Feel My Love",
+					"author": "Adele",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "657DFE8E31880A1C3BDCAC5C46EF43F1",
+					"total": 348000,
+					"name": "One and Only",
+					"author": "Adele",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "C9EC4882D42D8A1EFDCD298B92C8C7E7",
+					"total": 229355,
+					"name": "Rolling in the Deep",
+					"author": "Adele",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "5A64D3FFAD85DADEB61F73161B813B57",
+					"total": 292545,
+					"name": "Someone Like You (Live)",
+					"author": "Adele",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "FCD1450271B6A28212B5398F000F61A6",
+					"total": 319000,
+					"name": "KINGS",
+					"author": "Angela",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "3F972CB8BCEB20B494C98FF892789D6A",
+					"total": 224000,
+					"name": "Let It Go",
+					"author": "Idina Menzel",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "4970937B297D22C466B9B2DA83D7B609",
+					"total": 225000,
+					"name": "For The First Time In Forever",
+					"author": "Kristen Bell、Idina Menzel",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "0410F51DA890C6949B0B93CB31D9B163",
+					"total": 127000,
+					"name": "Love Is an Open Door",
+					"author": "Kristen Bell、Santino Fontana",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "F5776FCB7A9D76A19D14A20E23F41CB2",
+					"total": 289000,
+					"name": "海誓山盟亦会分开",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "364967C4C4DF419B871BC9AE3C91B877",
+					"total": 205000,
+					"name": "后会无期",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "AFF3ECEC4E86798AF1312CF0BF3F2DD2",
+					"total": 278491,
+					"name": "柒末雪",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "CD5F82131D1E6DFBBF7AE61978BEEB78",
+					"total": 255086,
+					"name": "情歌悠扬",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "0E9335868BF8A0C631693AEBA7A9B95F",
+					"total": 275066,
+					"name": "曲终人未散",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "9750B1ABDE7CE01CB141CA7982FA33E0",
+					"total": 166165,
+					"name": "river flows in you",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "CAE72D9017D10C6DC1CADB2789A8D1B0",
+					"total": 239000,
+					"name": "三妻四妾",
+					"author": "王媛渊",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "E5FEA709955A6C059167552C2EE7FB01",
+					"total": 186227,
+					"name": "失恋别在意",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "3AC7335347436947121FF669D085DEC8",
+					"total": 255722,
+					"name": "送给我的朋友们",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "143CF8421BC88626299AA0A3B134232E",
+					"total": 252000,
+					"name": "一直在等",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "487B28CA68923EA4646B803FF3EA1E14",
+					"total": 253779,
+					"name": "游园会",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "2EAD1F53862E82DDFA7C41414055ECB9",
+					"total": 193000,
+					"name": "战放",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "8584F52E35C5BB5334BE90E08E6C59C4",
+					"total": 204539,
+					"name": "支离破碎",
+					"author": "本兮、黄伟",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "FE4346A13E6F0DDFF8E4B3E1F25F2A99",
+					"total": 178000,
+					"name": "自作多情",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "97E7094C51E253B777393D7CECDAAC1C",
+					"total": 261000,
+					"name": "最后的最后",
+					"author": "本兮",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "CF4A7A816625D6F6750D7FE292D4286D",
+					"total": 260441,
+					"name": "奇怪,我不懂得爱",
+					"author": "本兮、黄伟",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "FD1C04F6B5F1649BFA80A252D203A07B",
+					"total": 219000,
+					"name": "Father and Son",
+					"author": "Cat Stevens",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "93A0BE7482597B8345693DFE2388B659",
+					"total": 256000,
+					"name": "Cras numquam scire",
+					"author": "Yucca、小野大輔",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "5E64F542A8A94E0A6CA17C928B937CD7",
+					"total": 228000,
+					"name": "エウテルペ",
+					"author": "EGOIST",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "811FE78D460BDA2C72BA4CD6A38BCAD1",
+					"total": 245000,
+					"name": "IGNITE",
+					"author": "肥皂菌·珉珉的猫咪",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				},
+				{
+					"hash": "E91694AA09214BF9110C3EAF78A784EF",
+					"total": 227000,
+					"name": "心墙",
+					"author": "郭静",
+					"status": true,
+					"origin": "ku",
+					"originName": "酷狗"
+				}
+			]
+		}
+	}
+}
