@@ -7,14 +7,14 @@ export function humanTime(value) {
         return "00:00";
     }
     res +=
-        parseInt(value / 60) < 10
-            ? "0" + parseInt(value / 60)
-            : parseInt(value / 60);
+        Math.floor(value / 60) < 10
+            ? "0" + Math.floor(value / 60)
+            : Math.floor(value / 60);
     res += ":";
     res +=
-        parseInt(value % 60) < 10
-            ? "0" + parseInt(value % 60)
-            : parseInt(value % 60);
+        Math.floor(value % 60) < 10
+            ? "0" + Math.floor(value % 60)
+            : Math.floor(value % 60);
 
     return res;
 }

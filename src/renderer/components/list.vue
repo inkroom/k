@@ -1,22 +1,27 @@
 <template>
-  <el-scrollbar style="height:100%;" id="k-m-list-container">
-    <p>当前共有 {{ musicsSize }} 首</p>
-    <ul class="k-m-list">
-      <li v-for="(m,i) in musics" :key="i" class="text-ellipsis">
-        <span v-if="!m.status" class="el-badge__content el-badge__content--undefined">error</span>
-        
-        <span style="float:right">
-          <span>{{ m.originName }}</span>
-          <span>{{ m.time | humanTime}}</span>
-          <span>
-            <i class="el-icon-delete" @click="remove(m)"></i>
+  <div style="height:100%" id="k-music-list-container">
+    <p style="padding:5px;">共 {{ musicsSize }} 首</p>
+    <el-scrollbar style="height:100%;">
+      <ul class="k-m-list">
+        <li v-for="(m,i) in musics" :key="i" class="text-ellipsis">
+          <span v-if="!m.status" class="el-badge__content el-badge__content--undefined">error</span>
+
+          <span style="float:right">
+            <span>{{ m.originName }}</span>
+            <span>{{ m.time | humanTime}}</span>
+            <span>
+              <i class="el-icon-delete" @click="remove(m)"></i>
+            </span>
           </span>
-        </span>
-        <span  @click="play(i)" v-html="m.name +' - '+m.author" :title="m.name +' - '+m.author"></span>
-      </li>
-    </ul>
-    <import :show.sync="dialog.import.visible"></import>
-  </el-scrollbar>
+          <span v-if="index==i">
+            <i class="iconfont icon-hand-pointing-right"></i>
+          </span>
+          <span @click="play(i)" :title="m.name +' - '+m.author">{{ m.name }} - {{m.author}}</span>
+        </li>
+      </ul>
+      <import :show.sync="dialog.import.visible"></import>
+    </el-scrollbar>
+  </div>
 </template>
 <script>
 import origin from "../mixins/origin";
@@ -37,18 +42,29 @@ export default {
     }
   },
   data() {
+    console.log('data')
+    console.log(this.$store.state)
     return {
       dialog: {
         import: { visible: false }
       },
       mode: {
         random: true
-      }
+      },
+      index: -1
     };
   },
   created() {
     this.$eventHub.$on("next", this.next);
     this.$eventHub.$on("prev", music => {});
+    this.$eventHub.$on("playError", music => {
+      //查找index
+      let index = this.musics.findIndex(d => d.id === music.id);
+      if (index != -1) {
+        music.status = false;
+        this.$store.dispatch("updateMusic", { index, music });
+      }
+    });
 
     let v = { status: true, d: 3 };
     console.log("开始测试aa");
@@ -88,6 +104,7 @@ export default {
       if (this.musics[index].url && this.musics[index].url != "") {
         console.log(this.musics[index].url);
         console.log("有url，直接播放");
+        this.index = index;
         this.$eventHub.$emit("musicChange", this.musics[index]);
       } else {
         console.log("获取播放url");
@@ -95,13 +112,13 @@ export default {
           .getMusic(Object.assign({}, this.musics[index]))
           .then(music => {
             if (music.url && music.url !== "") {
+              this.index = index;
               this.$store.dispatch("updateMusic", { index, music });
-
               this.$eventHub.$emit("musicChange", music);
             } else {
               let music = Object.assign({ status: false }, this.musics[index]);
               music.status = false;
-              this.$store.dispatch("updateMusic", music);
+              this.$store.dispatch("updateMusic", { index, music });
               this.$message(`${music.name} 不能播放`);
             }
           });
@@ -111,10 +128,15 @@ export default {
 };
 </script>
 <style lang="scss">
+#k-music-list-container {
+  padding-bottom: 30px;
+  box-sizing: border-box;
+}
 .k-m-list {
   padding-right: 15px;
   padding-left: 15px;
-  padding-bottom: 15px;
+  // padding-bottom: 30px;
+  box-sizing: border-box;
   ul,
   li {
     list-style-type: none;
@@ -122,6 +144,10 @@ export default {
   }
   i {
     cursor: pointer;
+  }
+  .icon-hand-pointing-right {
+    color: rgb(214, 203, 203);
+    font-size: 20px;
   }
 }
 </style>

@@ -4,9 +4,9 @@
       <player></player>
     </div>
     <div class="main">
-      <el-scrollbar style="height:100%">
+      <!-- <el-scrollbar style="height:100%"> -->
         <list></list>
-      </el-scrollbar>
+      <!-- </el-scrollbar> -->
     </div>
   </div>
 
@@ -35,7 +35,7 @@ export default {
 
 
 <style lang="scss" >
-$title-height: 80px;
+$title-height: 90px;
 
 * {
   margin: 0;

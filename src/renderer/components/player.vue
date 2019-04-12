@@ -9,16 +9,24 @@
       </div>
       <div class="controller">
         <span>
-          <i class="el-icon-d-arrow-left" @click="prev"></i>
+          <i class="iconfont icon-prev" @click="prev"></i>
+          <!-- <i class="el-icon-d-arrow-left" @click="prev"></i> -->
+        </span>
+        <span v-if="playing">
+          <i class="iconfont icon-play" @click="playOrPause"></i>
+          <!-- <path t="1555081285936" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1164" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><path d="M514 114.4c-220 0-398.8 178.9-398.8 398.8S294 912 514 912s398.8-178.9 398.8-398.8S733.4 114.4 514 114.4z m0 754.9c-196.5 0-356.1-159.6-356.1-356.1-0.6-196.5 159.6-356.1 356.1-356.1s356.1 159.6 356.1 356.1S710.5 869.3 514 869.3z" p-id="1165" fill="#1296db"></path><path d="M698.2 472.3L448.3 328.1c-14.9-8.6-32.7-8.6-47.6 0-15 8.7-23.9 24.1-23.9 41.4v288.3c0 17.3 8.9 32.8 23.9 41.4 7.5 4.3 15.7 6.5 23.8 6.5 8.2 0 16.3-2.1 23.8-6.4l249.9-144.2c15-8.6 23.9-24.1 23.9-41.5 0-17.2-8.9-32.7-23.9-41.3z m-21.3 45.9L427 662.3c-2 1.2-3.8 0.6-4.9 0-1.2-0.7-2.6-2-2.6-4.5V369.6c0-2.5 1.4-3.8 2.6-4.4 0.6-0.4 1.5-0.7 2.5-0.7 0.7 0 1.6 0.2 2.4 0.7l249.9 144.2c2.1 1.2 2.5 3.1 2.5 4.5 0 1.2-0.5 3.1-2.5 4.3z" p-id="1166" fill="#1296db"></path></path> -->
+          <!-- <i class="el-icon-caret-right" @click="playOrPause" :title="playing?'播放中':'已暂停'"></i> -->
+        </span>
+        <span v-else>
+          <i class="iconfont icon-pause"  @click="playOrPause"></i>
+          <!-- <icon icon-class="play" /> -->
         </span>
         <span>
-          <i class="el-icon-caret-right" @click="playOrPause" :title="playing?'播放中':'已暂停'"></i>
+          <i class="iconfont icon-next" @click="next"></i>
+          <!-- <i class="el-icon-d-arrow-right" @click="next"></i> -->
         </span>
-        <span>
-          <i class="el-icon-d-arrow-right" @click="next"></i>
-        </span>
-        <span>
-          <i class="el-icon-sort"></i>
+        <span><i class="iconfont icon-random"></i>
+          <!-- <i class="el-icon-sort"></i> -->
         </span>
         <span style="position:relative">
           <!-- <el-slider
@@ -27,7 +35,8 @@
             height="100px"
             :show-tooltip="false"
           ></el-slider>-->
-          <i class="el-icon-bell"></i>
+          <i class="iconfont icon-volume"></i>
+          <!-- <i class="el-icon-bell"></i> -->
         </span>
       </div>
       <div class="process-bar">
@@ -127,7 +136,6 @@ export default {
       // document.removeEventListener("mouseup", this.clearDrag);
     },
     timeupdate() {
-      console.log("timeupdate");
       var currentTime = this.audio.currentTime;
       var duration = this.audio.duration;
 
@@ -164,23 +172,12 @@ export default {
         console.log(this.audio.currentTime);
         this.audio.play(); //暂停的情况下必须调用才能继续播放，播放中调用该方法无影响
       }
-    },
-    converTime(time) {
-      let value = "";
-      value +=
-        parseInt(time / 60) > 9
-          ? parseInt(time / 60)
-          : "0" + parseInt(time / 60);
-      value += ":";
-      value += time % 60 > 9 ? time % 60 : "0" + (time % 60);
-      return value;
     }
   }
 };
 </script>
 
 <style lang="scss">
-$title-height: 80px;
 $cover-max-width: 60px;
 
 $time-width: 100px;
@@ -222,6 +219,7 @@ $name-height:24px;
       width: 20%;
       box-sizing: border-box;
       > i {
+        font-size: 25px;
         cursor: pointer;
       }
     }

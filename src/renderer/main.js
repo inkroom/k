@@ -12,12 +12,24 @@ import * as filters from './filters';
 
 import './assets/index.scss';
 
+import './assets/font/iconfont.css';
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+// import SvgIcon from '@/components/icon/main'// svg组件
 
+// // register globally
+// Vue.component('svg-icon', SvgIcon)
+
+// const requireAll = requireContext => requireContext.keys().map(requireContext)
+// const req = require.context('../../static/svg', false, /\.svg$/)
+// requireAll(req)
+
+// import Icon from 'vue-svg-icon/Icon.vue' //引入
+ 
+// Vue.component('icon', Icon) //注册
 
 Vue.use(ElementUI);
 

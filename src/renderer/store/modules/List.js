@@ -18,7 +18,8 @@ const mutations = {
     });
   },
   updateMusic(state, data) {
-    state.list[data.index] = data;
+    console.log(data.music);
+    state.list[data.index] = data.music;
     db.set(`musics[${data.index}]`,data.music).write();
   }
 }

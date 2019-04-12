@@ -38,11 +38,13 @@ export default class Ku {
                 .then((res) => {
                     res = res.data;
                     if (res.status != 1 || res.err_code != 0) {
-                        callback(null);
+                        reject(null);
                     }
                     music.cover = res.data.img;
-                    console.log(res.data);
                     music.url = res.data.play_url;
+                    music.time = res.data.timelength / 1000;
+
+                    console.log(res.data);
                     console.log(music);
                     resolve(music);
                 }).catch((error) => {
