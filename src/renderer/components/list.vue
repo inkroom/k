@@ -2,9 +2,13 @@
   <div style="height:100%" id="k-music-list-container">
     <p style="padding:5px;">共 {{ musicsSize }} 首</p>
     <el-scrollbar style="height:100%;">
-      <ul class="k-m-list">
+      <ul class="k-m-list" ref="list">
         <li v-for="(m,i) in musics" :key="i" class="text-ellipsis">
-          <span v-if="!m.status" class="el-badge__content el-badge__content--undefined">error</span>
+          {{ i+1 }} .
+          <span
+            v-if="!m.status"
+            class="el-badge__content el-badge__content--undefined"
+          >error</span>
 
           <span style="float:right">
             <span>{{ m.originName }}</span>
@@ -16,9 +20,14 @@
           <span v-if="index==i">
             <i class="iconfont icon-hand-pointing-right"></i>
           </span>
-          <span @click="play(i)" :title="m.name +' - '+m.author">{{ m.name }} - {{m.author}}</span>
+          <span
+            class="name"
+            @click="play(i)"
+            :title="m.name +' - '+m.author"
+          >{{ m.name }} - {{m.author}}</span>
         </li>
       </ul>
+      <i class="iconfont icon-location-searching" @click="location"></i>
       <import :show.sync="dialog.import.visible"></import>
     </el-scrollbar>
   </div>
@@ -42,8 +51,8 @@ export default {
     }
   },
   data() {
-    console.log('data')
-    console.log(this.$store.state)
+    console.log("data");
+    console.log(this.$store.state);
     return {
       dialog: {
         import: { visible: false }
@@ -123,31 +132,67 @@ export default {
             }
           });
       }
+    },
+    location() {
+      function getStyle(obj, attr) {
+        if (obj.currentStyle) {
+          return obj.currentStyle[attr];
+        } else {
+          return document.defaultView.getComputedStyle(obj, null)[attr];
+        }
+      }
+
+      if (this.index !== -1) {
+        let margin = getStyle(this.$refs.list.children[0], "marginTop");
+        if (margin !== "" && margin.indexOf("px") != -1) {
+          margin = /^([0-9])/.exec(margin)[1];
+        } else {
+          margin = 0;
+        }
+
+        this.$refs.list.parentNode.parentNode.scrollTop =
+          this.$refs.list.children[this.index].offsetTop -
+          margin * (this.index + 1);
+      }
     }
   }
 };
 </script>
 <style lang="scss">
+$name-height: 24px;
+
 #k-music-list-container {
   padding-bottom: 30px;
   box-sizing: border-box;
-}
-.k-m-list {
-  padding-right: 15px;
-  padding-left: 15px;
-  // padding-bottom: 30px;
-  box-sizing: border-box;
-  ul,
-  li {
-    list-style-type: none;
-    margin: 10px 3px;
+  .k-m-list {
+    padding-right: 15px;
+    padding-left: 15px;
+    // padding-bottom: 30px;
+    box-sizing: border-box;
+    ul,
+    li {
+      list-style-type: none;
+      margin: 10px 3px;
+    }
+    i {
+      cursor: pointer;
+    }
+    .icon-hand-pointing-right {
+      color: rgb(214, 203, 203);
+      font-size: 20px;
+    }
+    .name {
+      line-height: $name-height;
+      height: $name-height;
+    }
   }
-  i {
+  .icon-location-searching {
     cursor: pointer;
-  }
-  .icon-hand-pointing-right {
-    color: rgb(214, 203, 203);
-    font-size: 20px;
+
+    font-size: 25px;
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
   }
 }
 </style>

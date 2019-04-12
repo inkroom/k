@@ -38,3 +38,7 @@
 .icon-hand-pointing-right:before {
   content: "\e793";
 }
+
+.icon-location-searching:before {
+  content: "\e68d";
+}

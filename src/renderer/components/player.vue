@@ -5,7 +5,7 @@
     </div>
     <div class="right">
       <div>
-        <span>{{music.name}}</span>
+        <span>{{music.name}} - {{ music.author }}</span>
       </div>
       <div class="controller">
         <span>
