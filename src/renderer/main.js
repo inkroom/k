@@ -10,13 +10,22 @@ import ElementUI from "element-ui";
 
 // import alert from './components/message';
 
-// import "element-ui/lib/theme-chalk/index.css";
+
+
+if (db.get('bg').value().mode == 'light') {
+  require("element-ui/lib/theme-chalk/index.css")
+  // import "element-ui/lib/theme-chalk/index.css";
+} else {
+  require('element-theme-dark')
+  // import 'element-theme-dark';
+}
+
 
 // import "../../theme/index.css";
-import 'element-theme-dark';
 
 
-console.log(require ('../../package.json'));
+
+console.log(require('../../package.json'));
 
 Vue.use(ElementUI);
 

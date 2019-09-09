@@ -4,7 +4,7 @@
     <!-- <img id="bg" :src="bg.path"> -->
     <el-container style="height:100%">
       <el-header class="title-bar">
-        <img src="static/img/k.png" style alt="k-redis" @click="()=>$refs.bg.showSetBg()">
+        <img src="static/img/k.png" style alt="k-redis" @click="()=>$refs.bg.showSetBg()" />
         <span class="title">{{ title }}</span>
         <span class="controller">
           <i class="el-icon-minus" @click="$electron.remote.getCurrentWindow().minimize()"></i>
@@ -36,9 +36,9 @@
 
 <script>
 import Background from "./components/background";
-import Entry from './components/entry'
+import Entry from "./components/entry";
 export default {
-  components: { Background ,Entry},
+  components: { Background, Entry },
   name: "k",
   data() {
     //获取是否有退出相关配置信息
@@ -57,8 +57,7 @@ export default {
       }
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     close() {
       //存储配置信息
@@ -81,10 +80,15 @@ export default {
 
 $title-bar-height: 35px;
 
-*{
+html,
+body {
+  background: white;
+}
+* {
   cursor: default;
 }
-.el-notification,.el-message {
+.el-notification,
+.el-message {
   margin-top: $title-bar-height + 12px;
 }
 
@@ -97,6 +101,10 @@ $title-bar-height: 35px;
 
   height: $title-bar-height !important; //element对于header使用行内样式，所以需要提权
 
+  .title {
+    color: white;
+  }
+
   > img {
     -webkit-app-region: no-drag;
     height: $title-bar-height;
@@ -107,6 +115,7 @@ $title-bar-height: 35px;
 
   .controller {
     float: right;
+    color:white;
   }
   .controller > i {
     cursor: pointer;

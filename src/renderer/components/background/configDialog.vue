@@ -25,6 +25,10 @@
     <el-form-item label="循环间隔：">
       <el-input placeholder="单位：秒" v-model="dialog.bg.form.interval" size="small"></el-input>
     </el-form-item>
+    <el-form-item label="主题">
+      <el-radio v-model="dialog.bg.form.mode" label="dark">黑色</el-radio>
+      <el-radio v-model="dialog.bg.form.mode" label="light">白色</el-radio>
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="setBg">确认</el-button>
       <el-button @click="close">取消</el-button>
@@ -38,10 +42,11 @@ export default {
     return {
       dialog: {
         bg: {
-          form: {
+          form: this.$db.get("bg").value() || {
             type: "1",
             interval: "",
-            dir: ""
+            dir: "",
+            mode:'dark'
           }
         }
       }
@@ -80,7 +85,6 @@ export default {
 
         this.$emit("bg-change", Object.assign({}, this.dialog.bg.form));
         // this.getNextBg();
-
       }
     }
   }

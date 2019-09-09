@@ -66,7 +66,7 @@
         @keyup.enter.native="command"
       ></el-input>
       <el-scrollbar style="height:300px;">
-        <div v-html="this.terminal.result" style="margin-bottom:30px;user-select:auto;color:#eee"></div>
+        <div v-html="this.terminal.result" style="margin-bottom:30px;user-select:auto;"></div>
       </el-scrollbar>
 
       <!-- <el-input
@@ -178,7 +178,7 @@ export default {
             console.log(value);
           } else {
             console.log(value);
-            if (value == null) this.terminal.result="";
+            if (value == null) this.terminal.result = "";
             else
               this.terminal.result = this.htmlEscape(value).replace(
                 new RegExp("\\n", "g"),
