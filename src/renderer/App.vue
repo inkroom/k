@@ -79,7 +79,7 @@ export default {
 /* CSS */
 
 $title-bar-height: 35px;
-
+$title-bar-index:9999;
 html,
 body {
   background: white;
@@ -97,7 +97,7 @@ body {
   line-height: $title-bar-height;
   background-color: rgb(60, 60, 60);
   -webkit-app-region: drag;
-  z-index: 2002; /*避免被遮罩盖住*/
+  z-index: $title-bar-index; /*避免被遮罩盖住*/
 
   height: $title-bar-height !important; //element对于header使用行内样式，所以需要提权
 
