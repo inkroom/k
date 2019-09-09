@@ -37,7 +37,7 @@
       </el-tree>
     </el-scrollbar>
 
-    <div style="position:absolute;bottom:5px">
+    <div style="position:absolute;bottom:10px;left:10px;">
       <el-button
         size="small"
         style="bottom:5px;"

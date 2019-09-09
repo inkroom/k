@@ -55,7 +55,7 @@
     ></k-hash>
 
     <el-row style="margin-top:15px;">
-      <hr>控制台
+      <hr />控制台
     </el-row>
     <el-row>
       <!-- 控制台 -->
@@ -121,16 +121,14 @@ export default {
 
     this.load(this.key);
   },
-  computed:{
-    commandResult(){
+  computed: {
+    commandResult() {
       return this.htmlEscape(this.terminal.result);
     }
   },
-  filters: {
-   
-  },
+  filters: {},
   methods: {
-     htmlEscape(text) {
+    htmlEscape(text) {
       return text.replace(/[<>"&]/g, function(match, pos, originalText) {
         switch (match) {
           case "<":
@@ -168,22 +166,24 @@ export default {
           }
           if (value instanceof Array) {
             let temp = "";
-            value.forEach(value => {
+            value.forEach(v => {
               // console.log(`value = ${value}`)
-              temp += this.htmlEscape(value).replace("\n", "<br/>");
+              temp += this.htmlEscape(v).replace("\n", "<br/>");
               temp += "<br/>";
             });
             console.log(temp);
             this.terminal.result = temp;
           } else if (isNumber(value)) {
-            this.terminal.result = (value);
+            this.terminal.result = value;
             console.log(value);
           } else {
             console.log(value);
-            this.terminal.result = this.htmlEscape(value).replace(
-              new RegExp("\\n", "g"),
-              "<br/>"
-            );
+            if (value == null) this.terminal.result="";
+            else
+              this.terminal.result = this.htmlEscape(value).replace(
+                new RegExp("\\n", "g"),
+                "<br/>"
+              );
           }
           console.log(this.terminal.result);
           //防止对目前的key进行操作，再重载一次
@@ -206,7 +206,7 @@ export default {
         .catch(() => {});
     },
     del() {
-      this.terminal.command='del '+this.redis;
+      this.terminal.command = "del " + this.redis;
       this.command();
     },
     load(nv) {
