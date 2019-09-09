@@ -1,6 +1,6 @@
 {
   "name": "k",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "author": "inkroom <m18942819324@163.com>",
   "description": "基于electron的redis客户端",
   "license": "MIT",
