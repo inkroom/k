@@ -3,7 +3,7 @@ import db from '../../../datastore';
 console.log(db.get("hosts").value())
 
 const state = {
-  hosts: db.get("hosts").value()
+  hosts: JSON.parse(JSON.stringify(db.get("hosts").value())) 
 }
 
 console.log(state.hosts);
