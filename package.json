@@ -1,6 +1,6 @@
 {
   "name": "k",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "inkroom <m18942819324@163.com>",
   "description": "基于electron的redis客户端",
   "license": "Apache 2.0",
@@ -49,7 +49,7 @@
     "win": {
       "icon": "static\\img\\256x256.png",
       "target": [
-        "msi","nsis"
+        "msi"
       ]
     },
     "linux": {
@@ -57,15 +57,6 @@
         "AppImage"
       ],
       "icon": "build/icons/"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "./static/img/256x256.png",
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "k"
     }
   },
   "dependencies": {

@@ -2,7 +2,7 @@
   <el-row v-if="value" style="margin-top:15px;">
     <el-row v-for="(item,key) in value" :key="key" :gutter="10" style="margin-top:5px;">
       <el-col :md="11" :sm="11" :xs="11">
-        <el-input v-model="value[key]" @keyup.enter.native="renameField(key)"></el-input>
+        <el-input :value="key" @keyup.enter.native="renameField(key)" readonly=""></el-input>
       </el-col>
       <!-- {{item}} -->
       <el-col :md="11" :sm="11" :xs="11">
@@ -63,6 +63,8 @@ export default {
         if (this.type === "hash") {
           this.client.hgetall(this.redis, (err, value) => {
             this.$set(this, "value", value);
+            console.log('buffer ',(value['creationTime']))
+            console.log('hash value = ',value);
           });
         } else if (this.type === "zset") {
           this.client.zrange(this.redis, 0, -1, "WITHSCORES", (err, value) => {
