@@ -18,7 +18,7 @@
 - [x] redis订阅发布
 - [x] 提供命令行工具
 - [x] [黑色主题，来自Arattian/element-theme-dark](https://github.com/Arattian/element-theme-dark)
-- [ ] 实现自定义主题方案功能
+- [x] 实现自定义主题方案功能
 - [x] 背景图片自动切换（点击logo即可设置背景图片）
 
 ## Build Setup
@@ -37,19 +37,13 @@ npm run build
 
 ## bug
 - \x00等特殊字符无法正常显示
-- ~~命令结果过宽，没有横向滚动条~~
-- ~~生产模式添加host依然会一次添加两个~~
-- ~~host reflash无用~~
-- ~~优化string类型内容展示div，文本出现红色边框~~
-- ~~host点击刷新后，所有key都出现下拉icon~~
-- ~~部分情况下，删除host，会出现无限递归~~
 - 偶尔删除host会报循环引用不能json的错
 
 ## download
 
 下载地址：[https://github.com/inkroom/k/releases](https://github.com/inkroom/k/releases)
 
-ps:**因本人基本只使用linux系统，因此只提供AppImage格式，其余格式请clone后自行打包** 
+ps：**因本人基本只使用linux系统，因此只提供AppImage格式，其余格式请clone后自行打包** 
 
 
 ps: deb格式图标老是不出来，目前尚未解决
@@ -60,3 +54,10 @@ ps: deb格式图标老是不出来，目前尚未解决
 MIT
 
 
+
+## thanks
+
+感谢 [JetBrains](https://www.jetbrains.com/?from=k) 提供的免费 [License Certificate](https://www.jetbrains.com/shop/eform/opensource?product=ALL&from=k) 
+
+
+![jetbrains](https://user-images.githubusercontent.com/27911304/68260536-3d22fc80-0078-11ea-84ff-9222a94cf321.png)
