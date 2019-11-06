@@ -23,10 +23,10 @@ export default {
   props: {
     redis: {
       type: String,
-      required: true,
+      required: true
     },
-    client: {
-      type: Object,
+    index: {
+      type: String,
       required: true
     }
   },
@@ -54,25 +54,32 @@ export default {
       this.load();
     },
     load() {
-      if (this.redis ) {
+      if (this.redis) {
         // TODO 后期可能需要处理一下超大数据的情况
-        this.client.lrange(this.redis, 0, -1, (err, value) => {
-          if (err) console.log(err);
-
-          let list = [];
-          for (let row = 0; row < Math.ceil(value.length / 3); row++) {
-            let col = [];
-            for (let i = row * 3; i < (row + 1) * 3 && i < value.length; i++) {
-              let temp = { index: i, value: value[i] };
-              col.push(temp);
+        this.$redis
+          .lrange(this.index, this.redis, 0, -1)
+          .then(value => {
+            let list = [];
+            for (let row = 0; row < Math.ceil(value.length / 3); row++) {
+              let col = [];
+              for (
+                let i = row * 3;
+                i < (row + 1) * 3 && i < value.length;
+                i++
+              ) {
+                let temp = { index: i, value: value[i] };
+                col.push(temp);
+              }
+              list.push(col);
             }
-            list.push(col);
-          }
-          this.list = list;
+            this.list = list;
 
-          this.$set(this, "list", list);
-          this.$set(this, "value", value);
-        });
+            this.$set(this, "list", list);
+            this.$set(this, "value", value);
+          })
+          .catch(e => {
+            console.log(err);
+          });
       }
     }
   },

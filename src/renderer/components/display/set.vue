@@ -25,8 +25,8 @@ export default {
       type: String,
       required: true
     },
-    client: {
-      type: Object,
+    index: {
+      type: String,
       required: true
     }
   },
@@ -54,10 +54,8 @@ export default {
       // this.load();
     },
     load() {
-      if (this.redis ) {
-        this.client.sunion(this.redis, (err, value) => {
-          if (err) console.log(err);
-
+      if (this.redis) {
+        this.$redis.sunion(this.index, this.redis).then(value => {
           let list = [];
           for (let row = 0; row < Math.ceil(value.length / 3); row++) {
             let col = [];
@@ -71,7 +69,6 @@ export default {
 
           this.$set(this, "list", list);
           this.value = value;
-          // this.$set(this.value, "value", value);
         });
       }
     }

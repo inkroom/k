@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  render(h){
+  render(h) {
     return h();
   },
   methods: {
@@ -58,7 +58,7 @@ export default {
             .then(() => {
               //删除key
               this.$message("删除成功");
-              console.log(node)
+              console.log(node);
               console.log(data);
               this.$refs.tree.remove(node);
               this.$emit("key-remove", node.parent, {
@@ -82,93 +82,77 @@ export default {
     refresh(node, data) {
       if (node.level === 1) {
         //host
-        let client = data.client;
-        if (!client) {
-          client = this.createClient(data).then(client => {
-            return Promise.resolve(client);
-          });
-        } else {
-          client = Promise.resolve(client);
+        let client = Promise.resolve(data.index);
+        if (!data.index) {
+          client = this.createClient(data);
         }
-
-        client.then(client => {
-          client
-            .keysAsync("*")
-            .then(value => {
-              let keys = [];
-              value.forEach(e => {
-                keys.push({
-                  label: e,
-                  host: data.host,
-                  port: data.port,
-                  left: true,
-                  isLeaf: true,
-                  client: client
-                });
+        client.then(index => {
+          this.$redis.keysAsync(index, "*").then(value => {
+            let keys = [];
+            value.forEach(e => {
+              keys.push({
+                label: e,
+                host: data.host,
+                port: data.port,
+                left: true,
+                isLeaf: true,
+                index: index
               });
-              var theChildren = node.childNodes;
-              theChildren.splice(0, theChildren.length);
-              //FIXME  新刷新出来的key带有下拉按钮，不被认为是叶子节点
-
-              node.doCreateChildren(keys);
-              //TODO 优化去除叶子节点的逻辑，这个实现方案过于野蛮
-              node.childNodes.forEach(e => {
-                e.isLeaf = true;
-              });
-            })
-            .catch(err => {
-              this.$message.error(`${data.label}刷新失败`);
-              console.log(err);
             });
+            var theChildren = node.childNodes;
+            theChildren.splice(0, theChildren.length);
+            //FIXME  新刷新出来的key带有下拉按钮，不被认为是叶子节点
+
+            node.doCreateChildren(keys);
+            //TODO 优化去除叶子节点的逻辑，这个实现方案过于野蛮
+            node.childNodes.forEach(e => {
+              e.isLeaf = true;
+            });
+          });
         });
       } else if (node.level === 1) {
         //key
       }
     },
     createClient(data) {
-      return new Promise((resolve, reject) => {
-        let options = {
-          port: data.port,
-          host: data.host,
-          retry_strategy: value => {
-            if (value.code === "ECONNREFUSED") {
-              //此时不重试
-            }
-            //FIXME: 无法触发error事件
-            return new Error(`${value.address}无法连接`);
-          }
-        };
+      return this.$redis.init(data.host, data.port, data.password, data.index);
+      // .then((key,client)=>{
 
-        console.log(options);
-        if (data.index !== 0) {
-          options.db = data.index;
-        }
-        if (data.password !== "") {
-          options.password = data.password;
-        }
-        let client = this.$redis.redis
-          .createClient(options)
-          .on("error", err => {
-            console.log("event error");
-            this.$message.error(`${data.label}连接出现错误`);
-            data.client = null;
-            reject(err);
-          })
-          .on("ready", () => {
-            resolve(client);
-          })
-          .on("end", () => {
-            console.log("redis end");
-            data.client = null;
-            this.$notify({
-              duration: 0,
-              message: `${data.label}连接已断开`,
-              position: "bottom-right"
-            });
-            reject();
-          });
-        data.client = client;
-      });
+      // })
+
+      // return new Promise((resolve, reject) => {
+
+      //   console.log(options);
+      //   if (data.index !== 0) {
+      //     options.db = data.index;
+      //   }
+      //   if (data.password !== "") {
+      //     options.password = data.password;
+      //   }
+
+      //   let client = this.$redis.redis
+      //     .createClient(options)
+      //     .on("error", err => {
+      //       console.log("event error");
+      //       this.$message.error(`${data.label}连接出现错误`);
+      //       data.client = null;
+      //       reject(err);
+      //     })
+      //     .on("ready", () => {
+      //       resolve(client);
+      //     })
+      //     .on("end", () => {
+      //       console.log("redis end");
+      //       data.client = null;
+      //       this.$notify({
+      //         duration: 0,
+      //         message: `${data.label}连接已断开`,
+      //         position: "bottom-right"
+      //       });
+      //       reject();
+      //     });
+      //   data.client = client;
+      // });
     }
   }
 };

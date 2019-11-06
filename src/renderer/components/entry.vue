@@ -65,7 +65,7 @@
             v-for="(item) in tabs.keys"
           >
             <subscribe v-if="item.channel" :client="item.client" :channel="item.channel"></subscribe>
-            <display :redis="item.key" :client="item.client" v-else></display>
+            <display :redisKey="item.key" :index="item.index" v-else></display>
           </el-tab-pane>
         </el-tabs>
       </el-scrollbar>
@@ -209,7 +209,7 @@ export default {
       // 判断当前是否有数据
       let index = this.tabs.keys.findIndex(d => {
         console.log(d);
-        if (d.key) {
+        if (d.key) {//叶子节点，及某个指定的redis数据
           return d.label === data.label && d.key === data.key;
         } else {
           return d.label === data.label;
@@ -220,7 +220,6 @@ export default {
       console.log(`查找的index=${index}`);
       if (index === -1) {
         //新增
-        data.client = client;
         this.tabs.keys.push(data);
       } else {
         // if(data.key)

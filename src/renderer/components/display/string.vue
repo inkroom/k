@@ -12,13 +12,13 @@
     height: 100%;
     border: none !important;
     padding-bottom: 15px;
-    padding:-1px;
+    padding: -1px;
     &:focus,
     &:active {
       border: none !important;
     }
   }
-  *[contenteditable]{
+  *[contenteditable] {
     outline: 0;
     cursor: text;
   }
@@ -29,7 +29,7 @@
   <el-row style="margin-top:15px;padding-right:0;" class="el-textarea__inner">
     <el-scrollbar style class="el-textarea">
       <div class="k-redis-string-value-container" style>
-        <div class="k-redis-string-value" style="border:none" contenteditable="true" >{{ value }}</div>
+        <div class="k-redis-string-value" style="border:none" contenteditable="true">{{ value }}</div>
       </div>
       <!-- <el-input type="textarea" rows="10" style="max-height:150px;" v-model="value"></el-input> -->
     </el-scrollbar>
@@ -51,16 +51,15 @@ export default {
       type: String,
       required: false
     },
-    client: {
-      type: Object,
+    index: {
+      type: String,
       required: true
     }
   },
   mounted() {
     if (this.redis || (this.type && this.type === "string")) {
-      this.client.get(this.redis, (err, value) => {
-        this.value = value;
-        // this.$set(this, "value", value);
+      this.$redis.get(this.index, this.redis).then(v => {
+        this.value = v;
       });
     }
   }

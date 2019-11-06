@@ -17,14 +17,14 @@
 
 <template>
   <div style="height:100%;">
-    <el-row v-if="redis">
+    <el-row v-if="redisKey">
       <el-col :md="2" :sm="2" :xs="2">
         <span>name：</span>
       </el-col>
       <el-col :md="13" :sm="11" :xs="6">
         <!-- <span>{{value.key}}</span> -->
         <div class="el-input el-input--mini" style="user-select:auto;">
-          <span class="el-input__inner" style="user-select:auto;">{{redis}}</span>
+          <span class="el-input__inner" style="user-select:auto;">{{redisKey}}</span>
         </div>
         <!-- <el-input v-model="redis" size="mini" disabled></el-input> -->
       </el-col>
@@ -36,20 +36,20 @@
         <!-- <el-button size="mini" @click.native="set">修改</el-button> -->
       </el-col>
     </el-row>
-    <k-string :redis="redis" :client="client" v-if="type==='string'"></k-string>
+    <k-string :redis="redisKey" :index="index" v-if="type==='string'"></k-string>
     <k-hash
-      :redis="redis"
+      :redis="redisKey"
       :type="type"
       :client="client"
       v-else-if="type==='hash'"
       @command="command"
     ></k-hash>
-    <k-list :redis="redis" :client="client" v-else-if="type==='list'" @command="command"></k-list>
-    <k-set :redis="redis" :client="client" v-else-if="type==='set'" @command="command"></k-set>
+    <k-list :redis="redisKey" :index="index" v-else-if="type==='list'" @command="command"></k-list>
+    <k-set :redis="redisKey" :index="index" v-else-if="type==='set'" @command="command"></k-set>
     <k-hash
-      :redis="redis"
+      :redis="redisKey"
       :type="type"
-      :client="client"
+      :index="index"
       v-else-if="type==='zset'"
       @command="command"
     ></k-hash>
@@ -90,13 +90,14 @@ import { isNumber } from "util";
 export default {
   components: { KString, KHash, KList, KSet },
   props: {
-    redis: {
+    redisKey: {
       //对应键的key，如果是host就没有
       type: String,
       required: false
     },
-    client: {
-      type: Object,
+    index: {
+      // 标志redis 连接的索引
+      type: String,
       required: true
     }
   },
@@ -157,38 +158,37 @@ export default {
           args = [];
         }
 
-        this.client.sendCommand(command, args, (err, value) => {
-          if (err) {
-            if (err.code) {
-              this.terminal.result = err.message;
-              return;
+        this.$redis
+          .sendCommand(this.index, command, args)
+          .then(value => {
+            if (value instanceof Array) {
+              let temp = "";
+              value.forEach(v => {
+                // console.log(`value = ${value}`)
+                temp += this.htmlEscape(v).replace("\n", "<br/>");
+                temp += "<br/>";
+              });
+              console.log(temp);
+              this.terminal.result = temp;
+            } else if (isNumber(value)) {
+              this.terminal.result = value;
+              console.log(value);
+            } else {
+              console.log(value);
+              if (value == null) this.terminal.result = "";
+              else
+                this.terminal.result = this.htmlEscape(value).replace(
+                  new RegExp("\\n", "g"),
+                  "<br/>"
+                );
             }
-          }
-          if (value instanceof Array) {
-            let temp = "";
-            value.forEach(v => {
-              // console.log(`value = ${value}`)
-              temp += this.htmlEscape(v).replace("\n", "<br/>");
-              temp += "<br/>";
-            });
-            console.log(temp);
-            this.terminal.result = temp;
-          } else if (isNumber(value)) {
-            this.terminal.result = value;
-            console.log(value);
-          } else {
-            console.log(value);
-            if (value == null) this.terminal.result = "";
-            else
-              this.terminal.result = this.htmlEscape(value).replace(
-                new RegExp("\\n", "g"),
-                "<br/>"
-              );
-          }
-          console.log(this.terminal.result);
-          //防止对目前的key进行操作，再重载一次
-          this.load(this.redis);
-        });
+            console.log(this.terminal.result);
+            //防止对目前的key进行操作，再重载一次
+            this.load(this.redisKey);
+          })
+          .catch(err => {
+            if (err) this.terminal.result = err.message;
+          });
       }
     },
     rename() {
@@ -199,34 +199,43 @@ export default {
         inputErrorMessage: "key格式不正确"
       })
         .then(value => {
-          this.terminal.command = "rename " + this.key + " " + value;
-          this.key = value;
+          this.terminal.command = "rename " + this.redisKey + " " + value;
+          this.redisKey = value;
           this.command();
         })
         .catch(() => {});
     },
     del() {
-      this.terminal.command = "del " + this.redis;
+      this.terminal.command = "del " + this.redisKey;
       this.command();
     },
     load(nv) {
       if (nv) {
-        this.client.type(nv, (err, v) => {
-          this.type = v;
-        });
+        this.$redis
+          .type(this.index, nv)
+          .then(v => {
+            this.type = v;
+            //启动定时器
+          })
+          .catch(err => {
+            this.$message("发生错误");
+          });
 
-        this.client.ttl(nv, (err, value) => {
-          //启动定时器
-          this.ttl = parseInt(value);
-          if (this.ttl > -1) {
-            this.interval_index = setInterval(() => {
-              this.ttl -= 1;
-              if (this.ttl <= 0) {
-                clearInterval(this.interval_index);
-              }
-            }, 1000);
-          }
-        });
+        this.$redis
+          .ttl(this.index, nv)
+          .then(v => {
+            //启动定时器
+            this.ttl = parseInt(v);
+            if (this.ttl > -1) {
+              this.interval_index = setInterval(() => {
+                this.ttl -= 1;
+                if (this.ttl <= 0) {
+                  clearInterval(this.interval_index);
+                }
+              }, 1000);
+            }
+          })
+          .then(e => {});
       }
     }
   }

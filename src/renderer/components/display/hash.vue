@@ -2,7 +2,7 @@
   <el-row v-if="value" style="margin-top:15px;">
     <el-row v-for="(item,key) in value" :key="key" :gutter="10" style="margin-top:5px;">
       <el-col :md="11" :sm="11" :xs="11">
-        <el-input :value="key" @keyup.enter.native="renameField(key)" readonly=""></el-input>
+        <el-input :value="key" @keyup.enter.native="renameField(key)" readonly></el-input>
       </el-col>
       <!-- {{item}} -->
       <el-col :md="11" :sm="11" :xs="11">
@@ -27,8 +27,8 @@ export default {
       type: String,
       required: true
     },
-    client: {
-      type: Object,
+    index: {
+      type: String,
       required: true
     }
   },
@@ -58,24 +58,31 @@ export default {
       this.load();
     },
     load() {
-      console.log(`type = ${this.type}`)
+      console.log(`type = ${this.type}`);
       if (this.redis && (this.type === "hash" || this.type === "zset")) {
         if (this.type === "hash") {
-          this.client.hgetall(this.redis, (err, value) => {
-            this.$set(this, "value", value);
-            console.log('buffer ',(value['creationTime']))
-            console.log('hash value = ',value);
-          });
+          this.$redis
+            .hgetall(this.index, this.redis)
+            .then(v => {
+              this.$set(this, "value", v);
+              console.log("buffer ", v["creationTime"]);
+              console.log("hash value = ", v);
+            })
+            .catch(err => {});
         } else if (this.type === "zset") {
-          this.client.zrange(this.redis, 0, -1, "WITHSCORES", (err, value) => {
-            if (err) console.log(err);
-            let res = {};
-            for (let i = 0; i < value.length; i += 2) {
-              res[value[i]] = value[i + 1];
-            }
-            console.log(res);
-            this.$set(this, "value", res);
-          });
+          this.$redis
+            .zrange(this.index, this.redis, 0, -1, "WITHSCORES")
+            .then(value => {
+              let res = {};
+              for (let i = 0; i < value.length; i += 2) {
+                res[value[i]] = value[i + 1];
+              }
+              console.log(res);
+              this.$set(this, "value", res);
+            })
+            .catch(err => {
+              console.log(err);
+            });
         }
       }
     }

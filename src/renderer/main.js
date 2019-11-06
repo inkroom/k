@@ -33,6 +33,8 @@ Vue.use(ElementUI);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.redis = Vue.prototype.$redis = redis;
 Vue.db = Vue.prototype.$db = db;
+
+
 // Vue.alert = Vue.prototype.$alert = alert;
 
 Vue.config.productionTip = false
