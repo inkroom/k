@@ -60,4 +60,4 @@ MIT
 感谢 [JetBrains](https://www.jetbrains.com/?from=k) 提供的免费 [License Certificate](https://www.jetbrains.com/shop/eform/opensource?product=ALL&from=k) 
 
 
-![jetbrains](https://user-images.githubusercontent.com/27911304/68260536-3d22fc80-0078-11ea-84ff-9222a94cf321.png)
+![https://www.jetbrains.com/?from=k](https://user-images.githubusercontent.com/27911304/68261379-e7038880-007a-11ea-9f90-f73b946f0882.png)
