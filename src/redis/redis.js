@@ -18,6 +18,12 @@ let pool = {
 export default {
 
     init(host, port, password = '', index = 0) {
+
+        let key = host + '-' + port;
+        if (pool[key]) {
+            return Promise.resolve(key, pool[key]);
+        }
+
         let options = {
             port,
             host,
@@ -37,18 +43,20 @@ export default {
         console.log('init redis client')
 
         return new Promise((resolve, reject) => {
-            pool[host + '-' + port] = redis.createClient(options)
+            pool[key] = redis.createClient(options)
                 .on("error", err => {
                     console.error('创建redis client 失败')
                     reject(err);
-                   
+
                 })
                 .on("ready", () => {
                     console.log('创建redis client')
-                    resolve(host + '-' + port, pool[host + '-' + port]);
+                    resolve(key, pool[key]);
                 })
                 .on("end", () => {
-                    delete pool[host + '-' + port];
+                    console.log('创建之后end了')
+                    delete pool[key];
+                    reject();
                 })
         })
 
@@ -63,7 +71,7 @@ export default {
 
     },
     sendCommand(index, command, args) {
-        
+
         console.log(`index=${index} command =${command} `)
         if (!pool[index]) {
             console.log('没有')
@@ -194,6 +202,16 @@ export default {
                     resolve(v)
                 }
             });
+        });
+    },
+    subscribe(index, channel) {
+        if (!pool[index]) {
+            return Promise.reject();
+        }
+        return new Promise((resolve, reject) => {
+            pool[index].subscribe(channel);
+
+            resolve(pool[index]);
         });
     }
 }

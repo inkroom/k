@@ -45,9 +45,9 @@
       </tree>
     </el-aside>
 
-    <el-main @mouseup.native="mouseUp"  @mousemove.native="moving">
+    <el-main @mouseup.native="mouseUp" @mousemove.native="moving">
       <div
-      @mousedown="mouseDown"
+        @mousedown="mouseDown"
         style="height: 100%;position: absolute;left: 0;width: 5px;cursor: col-resize;z-index: 9999;"
       ></div>
       <el-scrollbar style="height:100%;">
@@ -64,7 +64,7 @@
             :key="getTabKey(item)"
             v-for="(item) in tabs.keys"
           >
-            <subscribe v-if="item.channel" :client="item.client" :channel="item.channel"></subscribe>
+            <subscribe v-if="item.channel" :index="item.index" :channel="item.channel"></subscribe>
             <display :redisKey="item.key" :index="item.index" v-else></display>
           </el-tab-pane>
         </el-tabs>
@@ -105,12 +105,10 @@ import Tree from "./tree";
 import Display from "./display/display";
 import Subscribe from "./display/subscribe";
 
-
 export default {
   name: "landing-page",
   components: { Tree, Display, Subscribe },
   data() {
-
     return {
       leftWidth: "250px",
       tabs: {
@@ -144,20 +142,30 @@ export default {
         let index = this.$store.state.hosts.hosts.findIndex(
           d => d.label === this.dialog.subscribe.form.label
         );
-        let client = this.$redis.redis.createClient(
-          this.$store.state.hosts.hosts[index].port,
-          this.$store.state.hosts.hosts[index].host
-        );
-        let item = {
-          label: this.dialog.subscribe.form.label,
-          channel: this.dialog.subscribe.form.channel,
-          client: client
-        };
-        this.tabs.keys.push(item);
+        let client = this.$redis
+          .init(
+            this.$store.state.hosts.hosts[index].host,
+            this.$store.state.hosts.hosts[index].port,
+            this.$store.state.hosts.hosts[index].password,
+            this.$store.state.hosts.hosts[index].db
+          )
+          .then((key, client) => {
 
-        // this.tabs.now = this.dialog.subscribe.form.label;
-        this.setTab(item);
-        this.dialog.subscribe.visible = false;
+            console.log('订阅获取到key')
+
+            let item = {
+              label: this.dialog.subscribe.form.label,
+              channel: this.dialog.subscribe.form.channel,
+              index: key
+            };
+            this.tabs.keys.push(item);
+
+            // this.tabs.now = this.dialog.subscribe.form.label;
+            this.setTab(item);
+            this.dialog.subscribe.visible = false;
+          }).catch(e=>{
+            this.$message.error('订阅出错')
+          });
       }
     },
     keyRemove(parent, key) {
@@ -209,7 +217,8 @@ export default {
       // 判断当前是否有数据
       let index = this.tabs.keys.findIndex(d => {
         console.log(d);
-        if (d.key) {//叶子节点，及某个指定的redis数据
+        if (d.key) {
+          //叶子节点，及某个指定的redis数据
           return d.label === data.label && d.key === data.key;
         } else {
           return d.label === data.label;

@@ -1,6 +1,6 @@
 {
   "name": "k",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "author": "inkroom <m18942819324@163.com>",
   "description": "基于electron的redis客户端",
   "license": "Apache 2.0",
