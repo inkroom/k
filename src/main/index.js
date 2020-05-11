@@ -36,6 +36,7 @@ function createWindow () {
     webPreferences:{
       webSecurity:false,
       devTools:true,
+      nodeIntegration: true
     }
   })
 

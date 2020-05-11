@@ -24,7 +24,7 @@
       <el-col :md="13" :sm="11" :xs="6">
         <!-- <span>{{value.key}}</span> -->
         <div class="el-input el-input--mini" style="user-select:auto;">
-          <span class="el-input__inner" style="user-select:auto;">{{redisKey}}</span>
+          <span class="el-input__inner" style="user-select:auto;overflow:hidden;text-overflow:ellipsis">{{redisKey}}</span>
         </div>
         <!-- <el-input v-model="redis" size="mini" disabled></el-input> -->
       </el-col>
@@ -161,6 +161,7 @@ export default {
         this.$redis
           .sendCommand(this.index, command, args)
           .then(value => {
+            console.log('执行命令的结果',value)
             if (value instanceof Array) {
               let temp = "";
               value.forEach(v => {
@@ -170,6 +171,9 @@ export default {
               });
               console.log(temp);
               this.terminal.result = temp;
+              if(value.length===0){
+                this.terminal.result='[没有结果]';
+              }
             } else if (isNumber(value)) {
               this.terminal.result = value;
               console.log(value);
