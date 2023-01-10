@@ -58,13 +58,7 @@
       ],
       "icon": "build/icons/"
     },
-    "publish": [
-        {
-            "provider": "github",
-            "owner": "lyswhut",
-            "repo": "lx-music-desktop"
-        }
-    ]
+    "publish": "always"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
