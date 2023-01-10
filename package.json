@@ -58,7 +58,13 @@
       ],
       "icon": "build/icons/"
     },
-    "publish": "always"
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "inkroom",
+        "repo": "k"
+      }
+    ]
   },
   "dependencies": {
     "bluebird": "^3.5.3",
