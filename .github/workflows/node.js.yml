@@ -4,13 +4,13 @@ on:
   push:
 
 jobs:
-  linux:
+  release:
     name: Linux
     runs-on: ${{ matrix.os }}
     # create a build matrix for jobs
     strategy:
       matrix:
-        os: [windows-2019, macos-10.15, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
